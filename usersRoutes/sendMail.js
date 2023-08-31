@@ -1,13 +1,22 @@
 const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
+const otpStorage = require("./otpStorage");
+
+function generateRandomString(length) {
+  let otp = "";
+  for (let i = 0; i < length; i++) {
+    otp += Math.floor(Math.random() * 10); // Generate a random digit (0-9)
+  }
+  return otp;
+}
+
+const otp = generateRandomString(6); 
+// console.log(otp);
 
 async function sendOTPEmail(toEmail) {
-
   try {
-    const otp = otpGenerator.generate(6, {
-      upperCase: false,
-      specialChars: false,
-    });
+    const otp = generateRandomString(6);
+    otpStorage[toEmail] = otp;
 
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -33,21 +42,3 @@ async function sendOTPEmail(toEmail) {
 }
 
 module.exports = sendOTPEmail;
-
-
-
-
-// const nodemalier = require("nodemailer")
-// const transpoter = nodemalier.createTransport({
-//     service: "gmail",
-//     auth:{
-//         user: {
-//             user:"soumyaranjanpradhan637115@gmail.com",
-//             pass: "rwzucmednnlgtwpg",
-//         }
-//     }
-// })
-
-// const mailOption = {
-//     fro
-// }
