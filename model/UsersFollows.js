@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Users = require("./Users");
 
-const UserProfileSchema = new mongoose.Schema(
+const UserFollowsSchema = new mongoose.Schema(
   {
     id: {
       type: Number,
@@ -9,28 +9,21 @@ const UserProfileSchema = new mongoose.Schema(
       autoIncrement: true,
     },
     followerId: {
-      type: Number,
-      references: {
-        model: Users,
-        key: "id",
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users", 
     },
     followingId: {
-      type: Number,
-      references: {
-        model: Users,
-        key: "id",
-      },
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "Users", 
     },
     createdAt: {
       type: Date,
-      defaultValue: Date.now,
+      default: Date.now,
     },
     deletedAt: {
       type: Date,
-      allowNull: true,
     },
   },
 );
 
-module.exports = mongoose.model("UserFollows", UserProfileSchema);
+module.exports = mongoose.model("UserFollows", UserFollowsSchema);

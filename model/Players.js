@@ -1,43 +1,35 @@
 const mongoose = require("mongoose");
 const Sports = require("./Sports");
 
-const Players = new mongoose.Schema({
-    id: {
-        type: Number,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      name: {
-        type: Number,
+const PlayersSchema = new mongoose.Schema({
+    name: {
+        type: String,  // Corrected the type to String
         required: true
-      },
-      sportsType: {
-        type: String,
-        references: {
-          model: Sports,
-          key: 'name',
-        },
-      },
-      avatarUrl: {
+    },
+    sportsType: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Sports', // Reference the "Sports" collection
+        required: true
+    },
+    avatarUrl: {
         type: String,
         required: true
-      },
-      kheltagId: {
+    },
+    kheltagId: {
         type: String,
         required: true
-      },
-      slug: {
+    },
+    slug: {
         type: String,
         required: true
-      },
-      createdAt: {
+    },
+    createdAt: {
         type: Date,
-        defaultValue: Date.now,
-      },
-      deletedAt: {
+        default: Date.now,
+    },
+    deletedAt: {
         type: Date,
-        allowNull: true,
-      },
-})
+    },
+});
 
-module.exports = mongoose.model("Players", Players);
+module.exports = mongoose.model("Players", PlayersSchema);

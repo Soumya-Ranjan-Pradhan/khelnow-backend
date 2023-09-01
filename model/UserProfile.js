@@ -4,11 +4,8 @@ const Users = require("./Users");
 const UserProfileSchema = new mongoose.Schema(
   {
     userId: {
-      type: Number,
-      references: {
-        model: Users,
-        key: "id",
-      },
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "Users",
     },
     bio: {
       type: String,
@@ -60,14 +57,13 @@ const UserProfileSchema = new mongoose.Schema(
     },
     createdAt: {
       type: Date,
-      defaultValue: Date.now,
+      default: Date.now, 
     },
     deletedAt: {
       type: Date,
-      allowNull: true,
     },
   },
-//   { timestamps: true }
+  // { timestamps: true }
 );
 
 module.exports = mongoose.model("UserProfile", UserProfileSchema);

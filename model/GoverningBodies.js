@@ -1,43 +1,35 @@
 const mongoose = require("mongoose");
 const Sports = require("./Sports");
 
-const GoverningBodies = new mongoose.Schema({
-    id: {
-        type: Number,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      name: {
+const GoverningBodiesSchema = new mongoose.Schema({
+    name: {
         type: String,
         required: true
-      },
-      sportsType: {
-        type: String,
-        references: {
-          model: Sports,
-          key: 'name',
-        },
-      },
-      logoUrl: {
+    },
+    sportsType: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Sports', // Reference the "Sports" collection
+        required: true
+    },
+    logoUrl: {
         type: String,
         required: true
-      },
-      kheltagId: {
+    },
+    kheltagId: {
         type: Number,
         required: true
-      },
-      slug: {
+    },
+    slug: {
         type: String,
         required: true
-      },
-      createdAt: {
+    },
+    createdAt: {
         type: Date,
-        defaultValue: Date.now,
-      },
-      deletedAt: {
+        default: Date.now,
+    },
+    deletedAt: {
         type: Date,
-        allowNull: true,
-      },
-})
+    },
+});
 
-module.exports = mongoose.model("GoverningBodies", GoverningBodies);
+module.exports = mongoose.model("GoverningBodies", GoverningBodiesSchema);
