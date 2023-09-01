@@ -6,7 +6,7 @@ const SportsSchema = new mongoose.Schema({
         required: true
     },
     kheltagId: {
-        type: Number, 
+        type: String, 
         required: true
     },
     slug: {
