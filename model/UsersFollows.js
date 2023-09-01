@@ -3,11 +3,6 @@ const Users = require("./Users");
 
 const UserFollowsSchema = new mongoose.Schema(
   {
-    id: {
-      type: Number,
-      primaryKey: true,
-      autoIncrement: true,
-    },
     followerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users", 
