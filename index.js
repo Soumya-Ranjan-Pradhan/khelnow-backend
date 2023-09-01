@@ -12,6 +12,7 @@ const userProfileRoutes = require("../server/routes/UserProfile");
 const UserFollow = require("../server/routes/UserFollows")
 const sports = require("../server/routes/Sports")
 const Teams = require("../server/routes/Team")
+const Player = require("../server/routes/Players")
 
 app.use("/users",users)
 app.use("/send-otp-email", otp);
@@ -20,6 +21,7 @@ app.use("/user-profiles", userProfileRoutes);
 app.use(UserFollow)
 app.use(sports)
 app.use("/teams",Teams)
+app.use("/players",Player)
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Backend server is running");

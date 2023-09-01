@@ -3,12 +3,12 @@ const Sports = require("./Sports");
 
 const PlayersSchema = new mongoose.Schema({
     name: {
-        type: String,  // Corrected the type to String
+        type: String,
         required: true
     },
     sportsType: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Sports', // Reference the "Sports" collection
+        ref: 'Sports',
         required: true
     },
     avatarUrl: {
