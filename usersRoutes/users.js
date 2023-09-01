@@ -1,12 +1,57 @@
 const User = require("../model/Users");
-const router = require("express").Router(); 
+const router = require("express").Router();
 
 router.post("/", async (req, resp) => {
-  // console.log(req.body + "api call");
   try {
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "mobile",
+      "password",
+      "avatarUrl",
+      "userName",
+      "latestRefreshToken",
+      "role",
+    ];
+
+    const missingFields = [];
+
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        missingFields.push(field);
+      }
+    }
+
+    if (missingFields.length > 0) {
+      return resp
+        .status(400)
+        .json({
+          error: `Missing required fields:`,
+        });
+    }
+
+    const existingUser = await User.findOne({
+      $or: [
+        { email: req.body.email },
+        { userName: req.body.userName },
+        { mobile: req.body.mobile },
+      ],
+    });
+
+    if (existingUser) {
+      return resp
+        .status(400)
+        .json({
+          error:
+            "Users email, username, or phone number already exists",
+        });
+    }
+
     const newUser = new User(req.body);
-    const saveUser = await newUser.save();
-    resp.status(201).json(saveUser);
+    const savedUser = await newUser.save();
+
+    resp.status(201).json(savedUser);
   } catch (error) {
     resp.status(400).json({ error: error.message });
   }
@@ -28,7 +73,9 @@ router.get("/:id", async (req, res) => {
 //update the user
 router.put("/:id", async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

@@ -13,10 +13,12 @@ const UserSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     mobile: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -29,6 +31,7 @@ const UserSchema = new mongoose.Schema(
     userName: {
       type: String,
       required: true,
+      unique: true,
     },
     latestRefreshToken: {
       type: String,
@@ -53,5 +56,9 @@ const UserSchema = new mongoose.Schema(
   }
   //   { timestamps: true }
 );
+
+UserSchema.index({ email: 1 }, { unique: true });
+UserSchema.index({ userName: 1 }, { unique: true });
+UserSchema.index({ mobile: 1 }, { unique: true });
 
 module.exports = mongoose.model("User", UserSchema);
