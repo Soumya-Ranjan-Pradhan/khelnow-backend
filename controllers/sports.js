@@ -1,6 +1,6 @@
-const Sports = require("../model/Sports");
+import Sports from "../model/Sports.js";
 
-const post = async (req, res) => {
+const createSport = async (req, res) => {
   try {
     const { name, kheltagId, slug } = req.body;
     const sport = new Sports({ name, kheltagId, slug });
@@ -11,8 +11,8 @@ const post = async (req, res) => {
   }
 };
 
-//Get All Sports
-const get = async (req, res) => {
+// Get All Sports
+const getSports = async (req, res) => {
   try {
     const sports = await Sports.find();
     res.json(sports);
@@ -21,11 +21,11 @@ const get = async (req, res) => {
   }
 };
 
-// Get ID sport
-const getID = async (req, res) => {
+// Get Sport by ID
+const getSportID = async (req, res) => {
   try {
-    const userSport = req.params.id.trim();
-    const sport = await Sports.findById(userSport);
+    const sportId = req.params.id.trim();
+    const sport = await Sports.findById(sportId);
     if (!sport) {
       return res.status(404).json({ error: "Sport not found" });
     }
@@ -35,9 +35,8 @@ const getID = async (req, res) => {
   }
 };
 
-//update sports
-
-const updates = async (req, res) => {
+// Update Sport
+const updateSports = async (req, res) => {
   try {
     const { name, kheltagId, slug } = req.body;
     const updatedSport = await Sports.findByIdAndUpdate(
@@ -54,8 +53,8 @@ const updates = async (req, res) => {
   }
 };
 
-//Delete Sport
-const Delete = async (req, res) => {
+// Delete Sport
+const deleteSports = async (req, res) => {
   try {
     const deletedSport = await Sports.findByIdAndRemove(req.params.id);
     if (!deletedSport) {
@@ -67,4 +66,4 @@ const Delete = async (req, res) => {
   }
 };
 
-module.exports = { post, get, getID, updates, Delete };
+export { createSport,getSports, getSportID, updateSports, deleteSports };

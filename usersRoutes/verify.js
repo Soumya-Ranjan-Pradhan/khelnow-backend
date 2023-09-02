@@ -1,6 +1,7 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const Verify = require("../controllers/Verify")
+import Verify from "../controllers/Verify.js";
 
 router.post("/verify-otp", Verify);
-module.exports = router;
+
+export default router;

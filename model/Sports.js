@@ -1,25 +1,23 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const SportsSchema = new mongoose.Schema({
-    name: {
-        type: String, 
-        required: true
-    },
-    kheltagId: {
-        type: String, 
-        required: true
-    },
-    slug: {
-        type: String,
-        required: true
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now, 
-    },
-    deletedAt: {
-        type: Date,
-    },
+  name: {
+    type: String,
+    required: true,
+  },
+  slug: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  deletedAt: {
+    type: Date,
+  },
 });
 
-module.exports = mongoose.model("Sports", SportsSchema);
+const SportsModel = mongoose.model('Sports', SportsSchema);
+
+export default SportsModel;

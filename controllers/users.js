@@ -1,6 +1,6 @@
-const User = require("../model/Users");
+import userModel from "../model/Users.js";
 
-const post = async (req, resp) => {
+const registerUser = async (req, resp) => {
   try {
     const requiredFields = [
       "firstName",
@@ -23,14 +23,12 @@ const post = async (req, resp) => {
     }
 
     if (missingFields.length > 0) {
-      return resp
-        .status(400)
-        .json({
-          error: `Missing required fields:`,
-        });
+      return resp.status(400).json({
+        error: `Missing required fields: ${missingFields.join(", ")}`,
+      });
     }
 
-    const existingUser = await User.findOne({
+    const existingUser = await userModel.findOne({
       $or: [
         { email: req.body.email },
         { userName: req.body.userName },
@@ -39,27 +37,24 @@ const post = async (req, resp) => {
     });
 
     if (existingUser) {
-      return resp
-        .status(400)
-        .json({
-          error:
-            "User email, username, or phone number already exists",
-        });
+      return resp.status(400).json({
+        error: "User email, username, or phone number already exists",
+      });
     }
 
     const newUser = new User(req.body);
-    const savedUser = await newUser.save();
+    const savedUser = await new userModel.save();
 
     resp.status(201).json(savedUser);
   } catch (error) {
     resp.status(400).json({ error: error.message });
   }
-}
+};
 
-////Read the users
-const get = async (req, res) => {
+// Read the user
+const getuserByid = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await userModel.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -67,34 +62,43 @@ const get = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
-//update the user
-const update = async (req, res) => {
+// Update the user
+const updateUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const userId = req.params.id;
+    const updatedUserData = req.body;
+
+    const updatedUser = await userModel.findByIdAndUpdate(userId, updatedUserData, {
       new: true,
     });
-    if (!user) {
+
+    if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
     }
-    res.status(200).json(user);
+
+    res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
-//delete the user
-const deletes = async (req, res) => {
+// Delete the user
+const deleteuser = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
+    const userId = req.params.id;
+
+    const deletedUser = await userModel.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
       return res.status(404).json({ error: "User not found" });
     }
+
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
-module.exports = {get,post,update,deletes}
+export  { getuserByid, registerUser, deleteuser, updateUser };

@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const Sports = require("./Sports");
+import mongoose from 'mongoose';
 
 const GoverningBodiesSchema = new mongoose.Schema({
     name: {
@@ -15,10 +14,6 @@ const GoverningBodiesSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    kheltagId: {
-        type: Number,
-        required: true
-    },
     slug: {
         type: String,
         required: true
@@ -32,4 +27,6 @@ const GoverningBodiesSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("GoverningBodies", GoverningBodiesSchema);
+const GoverningBodiesSchemaModel = mongoose.model("GoverningBodies", GoverningBodiesSchema);
+
+export default GoverningBodiesSchemaModel

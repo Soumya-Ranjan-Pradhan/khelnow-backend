@@ -1,33 +1,45 @@
+import express from 'express';
+import dotenv from 'dotenv';
+import './db/conn.js';
 
-const express = require("express");
-const app = express();
-const dotenv = require("dotenv");
 dotenv.config();
-const users = require("./usersRoutes/users")
-const otp = require("../server/usersRoutes/otp")
+
+const app = express();
+
 app.use(express.json());
-require("./db/conn")
-const verifyOTPRoute = require("../server/usersRoutes/verify");
-const userProfileRoutes = require("../server/routes/UserProfile");
-const UserFollow = require("../server/routes/UserFollows")
-const sports = require("../server/routes/Sports")
-const Teams = require("../server/routes/Team")
-const Player = require("../server/routes/Players")
-const Competition = require("../server/routes/Competitions")
-const governingBodies = require("../server/routes/GoverningBodies")
 
+// Import routes using ES6 import statements
+import  usersRoutes from './usersRoutes/users.js';
+import otp from '../server/usersRoutes/otp.js';
+import verifyOTPRouter from '../server/usersRoutes/verify.js';
+import userProfileRouter from '../server/routes/UserProfile.js';
+import userFollowsRouter from '../server/routes/UserFollows.js';
+import sportsRouter from '../server/routes/Sports.js';
+import teamsRouter from '../server/routes/Team.js';
+import playersRouter from '../server/routes/Players.js';
+import competitionsRouter from '../server/routes/Competitions.js';
+import GoverningBodies from "../server/routes/GoverningBodies.js"
 
-app.use("/users",users)
-app.use("/send-otp-email", otp);
-app.use("/verify-otp", verifyOTPRoute);
-app.use("/user-profiles", userProfileRoutes);
-app.use(UserFollow)
-app.use(sports)
-app.use("/teams",Teams)
-app.use("/players",Player)
-app.use("/competitions",Competition)
-app.use("/governing-bodies",governingBodies)
+// Use the imported routes
+app.use('/users', usersRoutes);
+app.use('/send-otp-email', otp);
+app.use('/verify-otp', verifyOTPRouter);
+app.use('/user-profiles', userProfileRouter);
+app.use(userFollowsRouter);
+app.use(sportsRouter);
+app.use('/teams', teamsRouter);
+app.use('/players', playersRouter);
+app.use('/competitions', competitionsRouter);
+app.use('/governing-bodies',GoverningBodies)
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Backend server is running");
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Backend server is running on port ${port}`);
 });
+
+
+
+
+
+

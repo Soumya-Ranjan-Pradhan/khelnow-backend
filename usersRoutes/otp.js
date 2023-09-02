@@ -1,6 +1,9 @@
-const otp = require("../controllers/otp")
-const router = require("express").Router();
+import {otp} from "../controllers/otp.js";
+
+import { Router } from "express";
+
+const router = Router();
 
 router.post("/", otp);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,3 @@
+const otpStorage = {};
 
-const otpStorage = {}; 
-
-module.exports = otpStorage;
+export default otpStorage;

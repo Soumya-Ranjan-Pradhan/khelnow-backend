@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Sports = require("./Sports");
+import mongoose from 'mongoose';
+// const Sports = require("./Sports");
 
 const TeamsSchema = new mongoose.Schema({
     name: {
@@ -32,4 +32,5 @@ const TeamsSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("Teams", TeamsSchema);
+const TeamModel = mongoose.model("Teams", TeamsSchema);
+export default TeamModel;

@@ -1,9 +1,9 @@
-const UserProfile = require("../model/UserProfile");
+import UserProfileModel from "../model/UserProfile.js";
 
-// create a new user profile
-const post = async (req, res) => {
+// Create a new user profile
+const createProfile = async (req, res) => {
   try {
-    const userProfile = await UserProfile.create(req.body);
+    const userProfile = await UserProfileModel.create(req.body);
     res.status(201).json(userProfile);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
@@ -11,10 +11,10 @@ const post = async (req, res) => {
 };
 
 // Get user Profile
-const get = async (req, res) => {
+const getProfile = async (req, res) => {
   try {
     const userProfileId = req.params.id.trim();
-    const userProfile = await UserProfile.findById(userProfileId);
+    const userProfile = await UserProfileModel.findById(userProfileId);
     console.log(userProfile);
     if (!userProfile) {
       return res.status(404).json({ error: "User profile not found" });
@@ -26,10 +26,10 @@ const get = async (req, res) => {
   }
 };
 
-//update userProfile
-const put = async (req, res) => {
+// Update userProfile
+const updateProfile = async (req, res) => {
   try {
-    const userProfile = await UserProfile.findByIdAndUpdate(
+    const userProfile = await UserProfileModel.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
@@ -43,10 +43,10 @@ const put = async (req, res) => {
   }
 };
 
-//Delete The User
-const deletes = async (req, res) => {
+// Delete The User
+const deleteProfile = async (req, res) => {
   try {
-    const userProfile = await UserProfile.findByIdAndDelete(req.params.id);
+    const userProfile = await UserProfileModel.findByIdAndDelete(req.params.id);
     if (!userProfile) {
       return res.status(404).json({ error: "User profile not found" });
     }
@@ -56,4 +56,4 @@ const deletes = async (req, res) => {
   }
 };
 
-module.exports = {get,post,put,deletes}
+export { createProfile, getProfile, updateProfile, deleteProfile };

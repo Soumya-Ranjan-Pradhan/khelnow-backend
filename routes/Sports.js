@@ -1,15 +1,15 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const Sport = require("../controllers/sports");
+import { createSport,getSports, getSportID, updateSports, deleteSports } from "../controllers/sports.js";
 
-router.post("/sports", Sport.post);
+router.post("/sports", createSport);
 
-router.get("/", Sport.get);
+router.get("/", getSports);
 
-router.get("/sports/:id", Sport.getID);
+router.get("/sports/:id", getSportID);
 
-router.put("/sports/:id", Sport.updates);
+router.put("/sports/:id", updateSports);
 
-router.delete("/sports/:id", Sport.Delete);
+router.delete("/sports/:id", deleteSports);
 
-module.exports = router;
+export default router;

@@ -1,11 +1,11 @@
-const UserFollows = require("../model/UsersFollows");
+import UserFollowsModel from "../model/UsersFollows.js";
 
-//user follow
+// User follow
 const follow = async (req, res) => {
   try {
     const { followerId, followingId } = req.body;
 
-    const existingFollow = await UserFollows.findOne({
+    const existingFollow = await UserFollowsModel.findOne({
       followerId,
       followingId,
     });
@@ -14,7 +14,7 @@ const follow = async (req, res) => {
       return res.status(400).json({ message: "User not following this." });
     }
 
-    const newFollow = new UserFollows({ followerId, followingId });
+    const newFollow = new UserFollowsModel({ followerId, followingId });
     await newFollow.save();
 
     return res.status(201).json({ message: "User following" });
@@ -24,12 +24,12 @@ const follow = async (req, res) => {
   }
 };
 
-//User unfollow
+// User unfollow
 const unfollow = async (req, res) => {
   try {
     const { followerId, followingId } = req.body;
 
-    const result = await UserFollows.findOneAndDelete({
+    const result = await UserFollowsModel.findOneAndDelete({
       followerId,
       followingId,
     });
@@ -38,11 +38,11 @@ const unfollow = async (req, res) => {
       return res.status(400).json({ message: "User not following." });
     }
 
-    return res.status(200).json({ message: "unfollowed the user." });
+    return res.status(200).json({ message: "Unfollowed the user." });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-module.exports = { follow, unfollow };
+export { follow, unfollow };

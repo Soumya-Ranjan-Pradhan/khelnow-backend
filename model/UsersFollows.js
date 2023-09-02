@@ -1,15 +1,15 @@
-const mongoose = require("mongoose");
-const Users = require("./Users");
+import mongoose from "mongoose";
+// const Users = require("./Users");
 
 const UserFollowsSchema = new mongoose.Schema(
   {
     followerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Users", 
+      ref: "Users",
     },
     followingId: {
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: "Users", 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
     },
     createdAt: {
       type: Date,
@@ -18,7 +18,8 @@ const UserFollowsSchema = new mongoose.Schema(
     deletedAt: {
       type: Date,
     },
-  },
+  }
 );
 
-module.exports = mongoose.model("UserFollows", UserFollowsSchema);
+const UserFollowsModel = mongoose.model("UserFollows", UserFollowsSchema);
+export default UserFollowsModel

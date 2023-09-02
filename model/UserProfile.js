@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Users = require("./Users");
+import mongoose from "mongoose";
+// const Users = require("./Users");
 
 const UserProfileSchema = new mongoose.Schema(
   {
@@ -62,8 +62,8 @@ const UserProfileSchema = new mongoose.Schema(
     deletedAt: {
       type: Date,
     },
-  },
-  // { timestamps: true }
+  }
 );
 
-module.exports = mongoose.model("UserProfile", UserProfileSchema);
+const UserProfileModel = mongoose.model("UserProfile", UserProfileSchema);
+export default UserProfileModel

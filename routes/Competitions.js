@@ -1,15 +1,17 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const Competition = require("../controllers/competitions");
+import {
+    createCompetitions, getAllCompetitions, getCompetitions, updateCompetitions, deleteCompetitions
+} from "../controllers/competitions.js";
 
-router.post("/", Competition.post);
+router.post("/", createCompetitions);
 
-router.get("/", Competition.getAll);
+router.get("/", getAllCompetitions);
 
-router.get("/:id", Competition.get);
+router.get("/:id", getCompetitions);
 
-router.put("/:id", Competition.updates);
+router.put("/:id", updateCompetitions);
 
-router.delete("/:id", Competition.deletes);
+router.delete("/:id", deleteCompetitions);
 
-module.exports = router;
+export default router;

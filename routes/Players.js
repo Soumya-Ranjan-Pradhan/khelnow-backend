@@ -1,15 +1,23 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const players = require("../controllers/players");
+import {
+  createPlayers,
+  getAllPlayers,
+  getPlayers,
+  updatePlayers,
+  deletePlayers,
+} from "../controllers/players.js";
 
-router.post("/", players.post);
+router.post("/", createPlayers);
 
-router.get("/", players.getAll);
+router.get("/", getAllPlayers);
 
-router.get("/:id", players.get);
+router.get("/:id", getPlayers);
 
-router.put("/:id", players.updates);
+router.get("/:id", getAllPlayers);
 
-router.delete("/:id", players.deletes);
+router.put("/:id", updatePlayers);
 
-module.exports = router;
+router.delete("/:id", deletePlayers);
+
+export default router;

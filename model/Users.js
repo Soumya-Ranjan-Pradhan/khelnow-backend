@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-
+import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema(
   {
     firstName: {
@@ -42,23 +41,23 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
     deviceIds: {
-      type: String,
-      defaultValue: [],
+      type: [String],
+      default: [],
     },
     createdAt: {
       type: Date,
-      defaultValue: Date.now,
+      default: Date.now,
     },
     deletedAt: {
       type: Date,
       allowNull: true,
     },
   }
-  //   { timestamps: true }
 );
 
 UserSchema.index({ email: 1 }, { unique: true });
 UserSchema.index({ userName: 1 }, { unique: true });
 UserSchema.index({ mobile: 1 }, { unique: true });
+const userModel =mongoose.model("User", UserSchema);
 
-module.exports = mongoose.model("User", UserSchema);
+export default userModel

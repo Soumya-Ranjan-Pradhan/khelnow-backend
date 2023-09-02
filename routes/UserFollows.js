@@ -1,9 +1,9 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const userFollows = require("../controllers/userFollows");
+import {follow, unfollow } from "../controllers/userFollows.js";
 
-router.post("/follow", userFollows.follow);
+router.post("/follow",follow);
 
-router.post("/unfollow", userFollows.unfollow);
+router.post("/unfollow", unfollow);
 
-module.exports = router;
+export default router;

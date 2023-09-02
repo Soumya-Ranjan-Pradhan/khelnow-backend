@@ -1,16 +1,16 @@
-const nodemailer = require("nodemailer");
-const otpGenerator = require("otp-generator");
-const otpStorage = require("./otpStorage");
+import nodemailer from "nodemailer";
+import otpGenerator from "otp-generator";
+import otpStorage from "./otpStorage.js";
 
 function generateRandomString(length) {
   let otp = "";
   for (let i = 0; i < length; i++) {
-    otp += Math.floor(Math.random() * 10); // Generate a random digit (0-9)
+    otp += Math.floor(Math.random() * 10); 
   }
   return otp;
 }
 
-const otp = generateRandomString(6); 
+const otp = generateRandomString(6);
 // console.log(otp);
 
 async function sendOTPEmail(toEmail) {
@@ -27,7 +27,7 @@ async function sendOTPEmail(toEmail) {
     });
 
     const mailOptions = {
-      from: "soumyaranjanpradhan637115@gmail.com", // Your Gmail email
+      from: "soumyaranjanpradhan637115@gmail.com", 
       to: toEmail,
       subject: "OTP Verification",
       text: `Your OTP is: ${otp}`,
@@ -41,4 +41,4 @@ async function sendOTPEmail(toEmail) {
   }
 }
 
-module.exports = sendOTPEmail;
+export default sendOTPEmail;

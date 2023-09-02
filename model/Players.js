@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Sports = require("./Sports");
+import mongoose from 'mongoose';
+// const Sports = require("./Sports");
 
 const PlayersSchema = new mongoose.Schema({
     name: {
@@ -12,10 +12,6 @@ const PlayersSchema = new mongoose.Schema({
         required: true
     },
     avatarUrl: {
-        type: String,
-        required: true
-    },
-    kheltagId: {
         type: String,
         required: true
     },
@@ -32,4 +28,6 @@ const PlayersSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("Players", PlayersSchema);
+const PlayersModel = mongoose.model("Players", PlayersSchema);
+
+export default PlayersModel;

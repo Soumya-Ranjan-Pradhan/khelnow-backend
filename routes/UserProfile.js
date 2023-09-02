@@ -1,13 +1,13 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const userProfile = require("../controllers/userProfile")
+import {createProfile, getProfile, updateProfile, deleteProfile } from "../controllers/userProfile.js";
 
-router.post("/", userProfile.post);
+router.post("/", createProfile);
 
-router.get("/:id", userProfile.get);
+router.get("/:id", getProfile);
 
-router.put("/:id", userProfile.put);
+router.put("/:id", updateProfile);
 
-router.delete("/:id", userProfile.deletes);
+router.delete("/:id", deleteProfile);
 
-module.exports = router;
+export default router;
