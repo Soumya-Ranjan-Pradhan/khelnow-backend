@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const CompetitionsSchema = new mongoose.Schema({
   name: {
@@ -7,7 +7,7 @@ const CompetitionsSchema = new mongoose.Schema({
   },
   sportsType: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Sports',
+    ref: "Sports",
     required: true,
   },
   logoUrl: {
@@ -27,6 +27,8 @@ const CompetitionsSchema = new mongoose.Schema({
   },
 });
 
-const CompetitionsModel = mongoose.model('Competitions', CompetitionsSchema)
+CompetitionsSchema.index({ name: 1 }, { unique: true });
+CompetitionsSchema.index({ slug: 1 }, { unique: true });
+const CompetitionsModel = mongoose.model("Competitions", CompetitionsSchema);
 
 export default CompetitionsModel;

@@ -26,6 +26,9 @@ const GoverningBodiesSchema = new mongoose.Schema({
         type: Date,
     },
 });
+GoverningBodiesSchema.index({ name: 1 }, { unique: true });
+GoverningBodiesSchema.index({ slug: 1 }, { unique: true });
+GoverningBodiesSchema.index({ sportsType: 1 }, { unique: true });
 
 const GoverningBodiesSchemaModel = mongoose.model("GoverningBodies", GoverningBodiesSchema);
 

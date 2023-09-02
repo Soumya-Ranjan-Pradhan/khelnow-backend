@@ -27,6 +27,8 @@ const PlayersSchema = new mongoose.Schema({
         type: Date,
     },
 });
+PlayersSchema.index({ name: 1 }, { unique: true });
+PlayersSchema.index({ slug: 1 }, { unique: true });
 
 const PlayersModel = mongoose.model("Players", PlayersSchema);
 

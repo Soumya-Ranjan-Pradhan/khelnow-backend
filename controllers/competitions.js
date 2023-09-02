@@ -3,6 +3,41 @@ import CompetitionsModel from "../model/Competitions.js";
 // Create a new competition
 const createCompetitions = async (req, res) => {
   try {
+    const requiredFields = [
+      "name",
+      "sportsType",
+      "slug",
+      "logoUrl",
+      "slug",
+    ];
+
+    const missingFields = [];
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        missingFields.push(field);
+      }
+    }
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        error: `Missing required fields: ${missingFields.join(" ")}`,
+      });
+    }
+
+    const existingUser = await userModel.findOne({
+      $or: [
+        { email: req.body.name },
+        { userName: req.body.slug },
+        { mobile: req.body.logoUrl },
+      ],
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        error: "name, sportsType, slug, sportsType already exists",
+      });
+    }
+
     const competitionData = req.body;
     const competition = new CompetitionsModel(competitionData);
     await competition.save();

@@ -3,7 +3,57 @@ import UserProfileModel from "../model/UserProfile.js";
 // Create a new user profile
 const createProfile = async (req, res) => {
   try {
-    const userProfile = await UserProfileModel.create(req.body);
+    const requiredFields = [
+      "bio",
+      "job",
+      "address",
+      "city",
+      "country",
+      "zipcode",
+      "language",
+      "notification",
+      "facebookUrl",
+      "instagramUrl",
+      "twitterUrl",
+      "location",
+    ];
+
+    const missingFields = [];
+    
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        missingFields.push(field);
+      }
+    }
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        error: `Missing required fields: ${missingFields.join(", ")}`,
+      });
+    }
+
+    const existingUser = await UserProfileModel.findOne({
+      $or: [
+        { bio: req.body.bio },
+        { job: req.body.job },
+        { address: req.body.address },
+        { city: req.body.city },
+        { country: req.body.country },
+        { zipcode: req.body.zipcode },
+        { notification: req.body.notification },
+        { facebookUrl: req.body.facebookUrl },
+        { instagramUrl: req.body.instagramUrl },
+        { twitterUrl: req.body.twitterUrl },
+      ],
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        error: "bio, job, address, city , country, zipcode, notification, facebookUrl, instagramUrl,twitterUrl, already exists",
+      });
+    }
+
+    const userProfile = await UserProfileModel.save();
     res.status(201).json(userProfile);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });

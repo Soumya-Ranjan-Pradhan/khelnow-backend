@@ -17,7 +17,8 @@ const SportsSchema = new mongoose.Schema({
     type: Date,
   },
 });
-
+SportsSchema.index({ name: 1 }, { unique: true });
+SportsSchema.index({ slug: 1 }, { unique: true });
 const SportsModel = mongoose.model('Sports', SportsSchema);
 
 export default SportsModel;

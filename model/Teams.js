@@ -15,10 +15,6 @@ const TeamsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    kheltagId: {
-        type: String,
-        required: true
-    },
     slug: {
         type: String,
         required: true
@@ -31,6 +27,8 @@ const TeamsSchema = new mongoose.Schema({
         type: Date,
     },
 });
-
+TeamsSchema.index({ name: 1 }, { unique: true });
+TeamsSchema.index({ slug: 1 }, { unique: true });
+TeamsSchema.index({ sportsType: 1 }, { unique: true });
 const TeamModel = mongoose.model("Teams", TeamsSchema);
 export default TeamModel;
