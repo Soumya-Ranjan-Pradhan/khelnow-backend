@@ -14,13 +14,7 @@ const registerUser = async (req, resp) => {
       "role",
     ];
 
-    const missingFields = [];
-
-    for (const field of requiredFields) {
-      if (!req.body[field]) {
-        missingFields.push(field);
-      }
-    }
+    const missingFields = requiredFields.filter((field) => !req.body[field]);
 
     if (missingFields.length > 0) {
       return resp.status(400).json({
@@ -38,12 +32,12 @@ const registerUser = async (req, resp) => {
 
     if (existingUser) {
       return resp.status(400).json({
-        error: "User email, username, or phone number already exists",
+        error: "User already exists",
       });
     }
 
-    const newUser = new User(req.body);
-    const savedUser = await new userModel.save();
+    const newUser = new userModel(req.body);
+    const savedUser = await newUser.save();
 
     resp.status(201).json(savedUser);
   } catch (error) {
@@ -70,9 +64,13 @@ const updateUser = async (req, res) => {
     const userId = req.params.id;
     const updatedUserData = req.body;
 
-    const updatedUser = await userModel.findByIdAndUpdate(userId, updatedUserData, {
-      new: true,
-    });
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      updatedUserData,
+      {
+        new: true,
+      }
+    );
 
     if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
@@ -101,4 +99,4 @@ const deleteuser = async (req, res) => {
   }
 };
 
-export  { getuserByid, registerUser, deleteuser, updateUser };
+export { getuserByid, registerUser, deleteuser, updateUser };

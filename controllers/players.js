@@ -3,7 +3,43 @@ import PlayersModel from "../model/Players.js";
 // Create a new player
 const createPlayers = async (req, res) => {
   try {
-    const player = new Players(req.body);
+    const requiredFields = [
+      "name",
+      // "sportsType",
+      "logoUrl",
+      "avatarUrl",
+      "slug",
+    ];
+
+    const missingFields = [];
+
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        missingFields.push(field);
+      }
+    }
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        error: `Missing required fields: ${missingFields.join(", ")}`,
+      });
+    }
+
+    const existingUser = await PlayersModel.findOne({
+      $or: [
+        { name: req.body.name },
+        { logoUrl: req.body.logoUrl },
+        {slug: req.body.slug },
+        {avatarUrl: req.body.avatarUrl },
+      ],
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        error: "player already exits",
+      });
+    }
+    const player = await new PlayersModel.save();
     await player.save();
     res.status(201).json(player);
   } catch (err) {

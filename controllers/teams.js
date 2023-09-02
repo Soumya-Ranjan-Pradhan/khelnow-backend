@@ -1,22 +1,41 @@
-import Sports from "../model/Sports.js";
+import Team from "../model/Teams.js";
 
 // Create a new team
 const createTeams = async (req, res) => {
   try {
-    const { name, sportsType, logoUrl, kheltagId, slug } = req.body;
-
-    const sports = await Sports.findById(sportsType);
-    if (!sports) {
-      return res.status(404).json({ error: "Sports type not found" });
+    const requiredFields = ["name", "logoUrl", "slug"];
+  
+    const missingFields = requiredFields.filter((field) => !req.body[field]);
+  
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        error: `Missing required fields: ${missingFields.join(", ")}`,
+      });
     }
-
-    const team = new Teams({ name, sportsType, logoUrl, kheltagId, slug });
-    const savedTeam = await team.save();
+  
+    const teamExists = await Team.exists({
+      $or: [
+        { name: req.body.name },
+        { logoUrl: req.body.logoUrl },
+        { slug: req.body.slug },
+      ],
+    });
+  
+    if (teamExists) {
+      return res.status(400).json({
+        error: "Team already exists",
+      });
+    }
+  
+    const newTeam = new Team(req.body);
+    const savedTeam = await newTeam.save();
+  
     res.json(savedTeam);
   } catch (error) {
     console.error("Error creating a new team:", error);
     res.status(500).json({ error: "Could not create a new team" });
   }
+  
 };
 
 // Get all teams

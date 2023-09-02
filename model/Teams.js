@@ -29,6 +29,5 @@ const TeamsSchema = new mongoose.Schema({
 });
 TeamsSchema.index({ name: 1 }, { unique: true });
 TeamsSchema.index({ slug: 1 }, { unique: true });
-TeamsSchema.index({ sportsType: 1 }, { unique: true });
 const TeamModel = mongoose.model("Teams", TeamsSchema);
 export default TeamModel;

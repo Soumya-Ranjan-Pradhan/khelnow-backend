@@ -18,13 +18,7 @@ const createProfile = async (req, res) => {
       "location",
     ];
 
-    const missingFields = [];
-    
-    for (const field of requiredFields) {
-      if (!req.body[field]) {
-        missingFields.push(field);
-      }
-    }
+    const missingFields = requiredFields.filter((field) => !req.body[field]);
 
     if (missingFields.length > 0) {
       return res.status(400).json({
@@ -49,12 +43,14 @@ const createProfile = async (req, res) => {
 
     if (existingUser) {
       return res.status(400).json({
-        error: "bio, job, address, city , country, zipcode, notification, facebookUrl, instagramUrl,twitterUrl, already exists",
+        error: "User profile with the same fields already exists",
       });
     }
 
-    const userProfile = await UserProfileModel.save();
-    res.status(201).json(userProfile);
+    const newUserProfile = new UserProfileModel(req.body);
+    const savedUserProfile = await newUserProfile.save();
+
+    res.status(201).json(savedUserProfile);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }

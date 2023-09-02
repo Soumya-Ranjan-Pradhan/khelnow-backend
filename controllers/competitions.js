@@ -3,20 +3,9 @@ import CompetitionsModel from "../model/Competitions.js";
 // Create a new competition
 const createCompetitions = async (req, res) => {
   try {
-    const requiredFields = [
-      "name",
-      "sportsType",
-      "slug",
-      "logoUrl",
-      "slug",
-    ];
+    const requiredFields = ["name", "slug", "logoUrl"];
 
-    const missingFields = [];
-    for (const field of requiredFields) {
-      if (!req.body[field]) {
-        missingFields.push(field);
-      }
-    }
+    const missingFields = requiredFields.filter((field) => !req.body[field]);
 
     if (missingFields.length > 0) {
       return res.status(400).json({
@@ -24,26 +13,27 @@ const createCompetitions = async (req, res) => {
       });
     }
 
-    const existingUser = await userModel.findOne({
+    const existingCompetition = await CompetitionsModel.findOne({
       $or: [
-        { email: req.body.name },
-        { userName: req.body.slug },
-        { mobile: req.body.logoUrl },
+        { name: req.body.name },
+        { slug: req.body.slug },
+        { logoUrl: req.body.logoUrl },
       ],
     });
 
-    if (existingUser) {
+    if (existingCompetition) {
       return res.status(400).json({
-        error: "name, sportsType, slug, sportsType already exists",
+        error: "Competition already exists",
       });
     }
 
-    const competitionData = req.body;
-    const competition = new CompetitionsModel(competitionData);
-    await competition.save();
-    res.status(201).json(competition);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const newCompetition = new CompetitionsModel(req.body);
+    const savedCompetition = await newCompetition.save();
+
+    res.status(201).json(savedCompetition);
+  } catch (error) {
+    console.error("Error creating a new competition:", error);
+    res.status(500).json({ error: "Could not create a new competition" });
   }
 };
 
@@ -91,7 +81,9 @@ const updateCompetitions = async (req, res) => {
 // Delete a competition
 const deleteCompetitions = async (req, res) => {
   try {
-    const competition = await CompetitionsModel.findByIdAndDelete(req.params.id);
+    const competition = await CompetitionsModel.findByIdAndDelete(
+      req.params.id
+    );
     if (!competition) {
       return res.status(404).json({ error: "Competition not found" });
     }

@@ -3,15 +3,39 @@ import GoverningBodiesModel from "../model/GoverningBodies.js";
 // Create a new governing body
 const CreateGoverning = async (req, res) => {
   try {
-    const newGoverningBody = await GoverningBodiesModel.create(req.body);
-    res.status(201).json(newGoverningBody);
+    const requiredFields = ["name", "slug", "logoUrl", "sportsType"];
+  
+    // Validate that all required fields
+    const missingFields = requiredFields.filter((field) => !req.body[field]);
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        error: `Missing required fields: ${missingFields.join(" ")}`,
+      });
+    }
+  
+    // Check  already exists
+    const existingGoverningBody = await GoverningBodiesModel.findOne({
+      sportsType: req.body.sportsType,
+    });
+  
+    if (existingGoverningBody) {
+      return res.status(400).json({
+        error: "Governing sportsType already exists",
+      });
+    }
+  
+    // Create and save a new governing body
+    const newGoverningBody = new GoverningBodiesModel(req.body);
+    const savedGoverning = await newGoverningBody.save();
+  
+    res.status(201).json(savedGoverning);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
+  
 };
 
 // Read all governing bodies
-
 const getAllGoverning = async (req, res) => {
   try {
     const governingBodies = await GoverningBodiesModel.find();
