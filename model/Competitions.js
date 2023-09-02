@@ -8,7 +8,7 @@ const CompetitionsSchema = new mongoose.Schema({
     },
     sportsType: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Sports', // This is the name of the referenced collection
+        ref: 'Sports',
         required: true
     },
     logoUrl: {
