@@ -8,7 +8,7 @@ const GoverningBodiesSchema = new mongoose.Schema({
     },
     sportsType: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Sports', // Reference the "Sports" collection
+        ref: 'Sports', 
         required: true
     },
     logoUrl: {
