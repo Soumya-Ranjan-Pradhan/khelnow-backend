@@ -2,38 +2,33 @@ import CompetitionsModel from "../model/Competitions.js";
 
 // Create a new competition
 const createCompetitions = async (req, res) => {
+  const { name, slug, sportsType, logoUrl } = req.body;
+
+  if (!name || !slug || !sportsType || !logoUrl) {
+    return res
+      .status(422)
+      .json({ error: 'Please fill in all the fields properly' });
+  }
+
   try {
-    const requiredFields = ["name", "slug", "logoUrl"];
-
-    const missingFields = requiredFields.filter((field) => !req.body[field]);
-
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        error: `Missing required fields: ${missingFields.join(" ")}`,
-      });
-    }
-
-    const existingCompetition = await CompetitionsModel.findOne({
-      $or: [
-        { name: req.body.name },
-        { slug: req.body.slug },
-        { logoUrl: req.body.logoUrl },
-      ],
+    const competitionExist = await CompetitionsModel.findOne({
+      name, slug, sportsType, logoUrl
     });
 
-    if (existingCompetition) {
-      return res.status(400).json({
-        error: "Competition already exists",
-      });
+    if (competitionExist) {
+      return res.status(400).json({ error: 'competition already exists' });
     }
 
-    const newCompetition = new CompetitionsModel(req.body);
-    const savedCompetition = await newCompetition.save();
+    const competition = new CompetitionsModel({
+      name, slug, sportsType, logoUrl
+    });
 
-    res.status(201).json(savedCompetition);
-  } catch (error) {
-    console.error("Error creating a new competition:", error);
-    res.status(500).json({ error: "Could not create a new competition" });
+    await competition.save();
+
+    res.status(201).json({ message: 'competition created successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create competition' });
   }
 };
 

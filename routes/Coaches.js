@@ -12,10 +12,10 @@ router.post("/",createCoaches);
 
 router.get("/",getNewCoaches);
 
-router.get(":id",getAllCoaches);
+router.get("/:id",getAllCoaches);
 
-router.put(":id",updateCoaches);
+router.put("/:id",updateCoaches);
 
-router.delete(":id",deleteCoaches);
+router.delete("/:id",deleteCoaches);
 
 export default router;

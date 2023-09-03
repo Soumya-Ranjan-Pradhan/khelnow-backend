@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const videoSchema = new mongoose.Schema({
   videoUrl: {
@@ -23,14 +23,12 @@ const videoSchema = new mongoose.Schema({
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', 
-    required: true,
+    ref: "User",
   },
 });
 
 videoSchema.index({ videoUrl: 1 }, { videoUrl: true });
 videoSchema.index({ caption: 1 }, { caption: true });
 
-const videoModel = mongoose.model('Video', videoSchema);
+const videoModel = mongoose.model("Video", videoSchema);
 export default videoModel;
-

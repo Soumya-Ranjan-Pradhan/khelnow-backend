@@ -1,40 +1,36 @@
 import Sports from "../model/Sports.js";
 
 const createSport = async (req, res) => {
-  try {
-    const requiredFields = ["name", "logoUrl", "slug"];
-  
-    const missingFields = requiredFields.filter((field) => !req.body[field]);
-  
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        error: `Missing required fields: ${missingFields.join(", ")}`,
-      });
-    }
-  
-    const teamExists = await Team.exists({
-      $or: [
-        { name: req.body.name },
-        { logoUrl: req.body.logoUrl },
-        { slug: req.body.slug },
-      ],
-    });
-  
-    if (teamExists) {
-      return res.status(400).json({
-        error: "Team already exists",
-      });
-    }
-  
-    const newTeam = new Team(req.body);
-    const savedTeam = await newTeam.save();
-  
-    res.json(savedTeam);
-  } catch (error) {
-    console.error("Error creating a new team:", error);
-    res.status(500).json({ error: "Could not create a new team" });
+  const { name, slug } = req.body;
+
+  if (!name || !slug) {
+    return res
+      .status(422)
+      .json({ error: 'Please fill in all the fields properly' });
   }
-  
+
+  try {
+    const sportExist = await Sports.findOne({
+      name,
+      slug,
+    });
+
+    if (sportExist) {
+      return res.status(400).json({ error: 'Sports already exists' });
+    }
+
+    const newSport = new Sports({
+      name,
+      slug,
+    });
+
+    await newSport.save();
+
+    res.status(201).json({ message: 'Sports created successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create Sports' });
+  }
 };
 
 // Get All Sports
@@ -92,4 +88,4 @@ const deleteSports = async (req, res) => {
   }
 };
 
-export { createSport,getSports, getSportID, updateSports, deleteSports };
+export { createSport, getSports, getSportID, updateSports, deleteSports };

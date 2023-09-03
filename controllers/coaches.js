@@ -1,38 +1,34 @@
 import coachesModel from "../model/Coaches.js";
 
 const createCoaches = async (req, res) => {
-    try {
-        const requiredFields = ["name", "slug", "avatarUrl","sportsType"];
-      
-        const missingFields = requiredFields.filter((field) => !req.body[field]);
-      
-        if (missingFields.length > 0) {
-          return res.status(400).json({
-            error: `Missing required fields: ${missingFields.join(" ")}`,
-          });
-        }
-      
-        const existingCoaches = await coachesModel.findOne({
-          $or: [
-            { name: req.body.name },
-            { slug: req.body.slug },
-            { avatarUrl: req.body.avatarUrl },
-          ],
-        });
-      
-        if (existingCoaches) {
-          return res.status(400).json({
-            error: "Coaches already exists",
-          });
-        }
-      
-        const newCoaches = new coachesModel(req.body);
-        const savedCoaches= await newCoaches.save();
-        res.status(201).json(savedCoaches);
-      } catch (error) {
-        console.error("Error creating a new coaches:", error);
-        res.status(500).json({ error: "Could not create a new coaches" });
-      }
+  const { name, slug, sportsType, avatarUrl } = req.body;
+
+  if (!name || !slug || !sportsType || !avatarUrl) {
+    return res
+      .status(422)
+      .json({ error: 'Please fill in all the fields properly' });
+  }
+
+  try {
+    const coachesExist = await coachesModel.findOne({
+      name, slug, sportsType, avatarUrl
+    });
+
+    if (coachesExist) {
+      return res.status(400).json({ error: 'coaches already exists' });
+    }
+
+    const newCoaches = new coachesModel({
+      name, slug, sportsType, avatarUrl
+    });
+
+    await newCoaches.save();
+
+    res.status(201).json({ message: 'coaches created successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create coaches' });
+  }
       
 };
 

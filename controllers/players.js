@@ -2,48 +2,33 @@ import PlayersModel from "../model/Players.js";
 
 // Create a new player
 const createPlayers = async (req, res) => {
+  const { name, slug, sportsType, avatarUrl } = req.body;
+
+  if (!name || !slug || !sportsType || !avatarUrl) {
+    return res
+      .status(422)
+      .json({ error: 'Please fill in all the fields properly' });
+  }
+
   try {
-    const requiredFields = [
-      "name",
-      // "sportsType",
-      "logoUrl",
-      "avatarUrl",
-      "slug",
-    ];
-
-    const missingFields = [];
-
-    for (const field of requiredFields) {
-      if (!req.body[field]) {
-        missingFields.push(field);
-      }
-    }
-
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        error: `Missing required fields: ${missingFields.join(", ")}`,
-      });
-    }
-
-    const existingUser = await PlayersModel.findOne({
-      $or: [
-        { name: req.body.name },
-        { logoUrl: req.body.logoUrl },
-        {slug: req.body.slug },
-        {avatarUrl: req.body.avatarUrl },
-      ],
+    const playerExist = await PlayersModel.findOne({
+      name, slug, sportsType, avatarUrl
     });
 
-    if (existingUser) {
-      return res.status(400).json({
-        error: "player already exits",
-      });
+    if (playerExist) {
+      return res.status(400).json({ error: 'Players already exists' });
     }
-    const player = await new PlayersModel.save();
-    await player.save();
-    res.status(201).json(player);
+
+    const newPlayers = new PlayersModel({
+      name, slug, sportsType, avatarUrl
+    });
+
+    await newPlayers.save();
+
+    res.status(201).json({ message: 'Players created successfully' });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create Players' });
   }
 };
 

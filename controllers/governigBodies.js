@@ -2,37 +2,34 @@ import GoverningBodiesModel from "../model/GoverningBodies.js";
 
 // Create a new governing body
 const CreateGoverning = async (req, res) => {
-  try {
-    const requiredFields = ["name", "slug", "logoUrl", "sportsType"];
-  
-    // Validate that all required fields
-    const missingFields = requiredFields.filter((field) => !req.body[field]);
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        error: `Missing required fields: ${missingFields.join(" ")}`,
-      });
-    }
-  
-    // Check  already exists
-    const existingGoverningBody = await GoverningBodiesModel.findOne({
-      sportsType: req.body.sportsType,
-    });
-  
-    if (existingGoverningBody) {
-      return res.status(400).json({
-        error: "Governing sportsType already exists",
-      });
-    }
-  
-    // Create and save a new governing body
-    const newGoverningBody = new GoverningBodiesModel(req.body);
-    const savedGoverning = await newGoverningBody.save();
-  
-    res.status(201).json(savedGoverning);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  const { name, slug, sportsType, logoUrl } = req.body;
+
+  if (!name || !slug || !sportsType || !logoUrl) {
+    return res
+      .status(422)
+      .json({ error: 'Please fill in all the fields properly' });
   }
-  
+
+  try {
+    const governingExist = await GoverningBodiesModel.findOne({
+      name, slug, sportsType, logoUrl
+    });
+
+    if (governingExist) {
+      return res.status(400).json({ error: 'governing already exists' });
+    }
+
+    const governing = new GoverningBodiesModel({
+      name, slug, sportsType, logoUrl
+    });
+
+    await governing.save();
+
+    res.status(201).json({ message: 'governing created successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create governing' });
+  }
 };
 
 // Read all governing bodies

@@ -1,39 +1,34 @@
-import Team from "../model/Teams.js";
+import Teams from "../model/Teams.js";
 
 // Create a new team
 const createTeams = async (req, res) => {
+  const { name, sportsType, logoUrl, slug } = req.body;
+
+  if (!name || !sportsType || !logoUrl || !slug) {
+    return res
+      .status(422)
+      .json({ error: 'Please fill in all the fields properly' });
+  }
+
   try {
-    const requiredFields = ["name", "logoUrl", "slug"];
-  
-    const missingFields = requiredFields.filter((field) => !req.body[field]);
-  
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        error: `Missing required fields: ${missingFields.join(", ")}`,
-      });
-    }
-  
-    const teamExists = await Team.exists({
-      $or: [
-        { name: req.body.name },
-        { logoUrl: req.body.logoUrl },
-        { slug: req.body.slug },
-      ],
+    const teamExist = await Teams.findOne({
+      name, sportsType, logoUrl, slug
     });
-  
-    if (teamExists) {
-      return res.status(400).json({
-        error: "Team already exists",
-      });
+
+    if (teamExist) {
+      return res.status(400).json({ error: 'Teams already exists' });
     }
-  
-    const newTeam = new Team(req.body);
-    const savedTeam = await newTeam.save();
-  
-    res.json(savedTeam);
-  } catch (error) {
-    console.error("Error creating a new team:", error);
-    res.status(500).json({ error: "Could not create a new team" });
+
+    const newSport = new Teams({
+      name, sportsType, logoUrl, slug
+    });
+
+    await newSport.save();
+
+    res.status(201).json({ message: 'Teams created successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create Teams' });
   }
   
 };
@@ -65,10 +60,10 @@ const getTeams = async (req, res) => {
 // Update a team
 const updateTeams = async (req, res) => {
   try {
-    const { name, sportsType, logoUrl, kheltagId, slug } = req.body;
+    const { name, sportsType, logoUrl,  slug } = req.body;
     const updatedTeam = await Teams.findByIdAndUpdate(
       req.params.id,
-      { name, sportsType, logoUrl, kheltagId, slug },
+      { name, sportsType, logoUrl, slug },
       { new: true }
     );
     if (!updatedTeam) {

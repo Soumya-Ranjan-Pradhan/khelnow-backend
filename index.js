@@ -20,6 +20,7 @@ import playersRouter from '../server/routes/Players.js';
 import competitionsRouter from '../server/routes/Competitions.js';
 import GoverningBodies from "../server/routes/GoverningBodies.js"
 import Coaches from "../server/routes/Coaches.js"
+import Videos from "../server/routes/Videos.js"
 
 // Use the imported routes
 app.use('/users', usersRoutes);
@@ -34,6 +35,7 @@ app.use('/competitions', competitionsRouter);
 app.use('/governing-bodies',GoverningBodies)
 app.use('/governing-bodies',GoverningBodies)
 app.use("/coaches",Coaches)
+app.use("/videos",Videos)
 
 const port = process.env.PORT || 3000;
 

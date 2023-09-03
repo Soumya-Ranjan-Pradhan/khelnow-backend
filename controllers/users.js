@@ -1,47 +1,69 @@
 import userModel from "../model/Users.js";
 
 const registerUser = async (req, resp) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    mobile,
+    password,
+    avatarUrl,
+    userName,
+    latestRefreshToken,
+    role,
+  } = req.body;
+
+  if (
+    !firstName ||
+    !lastName ||
+    !email ||
+    !mobile ||
+    !password ||
+    !avatarUrl ||
+    !userName ||
+    !latestRefreshToken ||
+    !role
+  ) {
+    return resp
+      .status(422)
+      .json({ error: "please fill in all the fields properly" });
+  }
+
   try {
-    const requiredFields = [
-      "firstName",
-      "lastName",
-      "email",
-      "mobile",
-      "password",
-      "avatarUrl",
-      "userName",
-      "latestRefreshToken",
-      "role",
-    ];
-
-    const missingFields = requiredFields.filter((field) => !req.body[field]);
-
-    if (missingFields.length > 0) {
-      return resp.status(400).json({
-        error: `Missing required fields: ${missingFields.join(", ")}`,
-      });
-    }
-
-    const existingUser = await userModel.findOne({
-      $or: [
-        { email: req.body.email },
-        { userName: req.body.userName },
-        { mobile: req.body.mobile },
-      ],
+    const userExist = await userModel.findOne({
+      firstName,
+      lastName,
+      email,
+      mobile,
+      password,
+      avatarUrl,
+      userName,
+      latestRefreshToken,
+      role,
     });
 
-    if (existingUser) {
-      return resp.status(400).json({
-        error: "User already exists",
-      });
+    if (userExist) {
+      return resp.status(400).json({ error: "User already exists" });
     }
 
-    const newUser = new userModel(req.body);
-    const savedUser = await newUser.save();
+    const user = new userModel({
+      firstName,
+      lastName,
+      email,
+      mobile,
+      password,
+      avatarUrl,
+      userName,
+      latestRefreshToken,
+      role,
+    });
 
-    resp.status(201).json(savedUser);
-  } catch (error) {
-    resp.status(400).json({ error: error.message });
+    await user.save();
+
+    resp.status(201).json({ message: "User registered successfully" });
+  } catch (err) {
+    console.error(err);
+    resp.status(500).json({ err: "Failed to register" });
   }
 };
 

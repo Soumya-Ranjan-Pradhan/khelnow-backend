@@ -2,57 +2,73 @@ import UserProfileModel from "../model/UserProfile.js";
 
 // Create a new user profile
 const createProfile = async (req, res) => {
+  const {
+    userId,
+    bio,
+    job,
+    address,
+    city,
+    country,
+    zipcode,
+    language,
+    notification,
+    role,
+    facebookUrl,
+    instagramUrl,
+    twitterUrl,
+    location,
+  } = req.body;
+
+  if (
+    !userId ||
+    !bio ||
+    !job ||
+    !address ||
+    !city ||
+    !country ||
+    !zipcode ||
+    !language ||
+    !notification ||
+    !role ||
+    !facebookUrl ||
+    !instagramUrl ||
+    !twitterUrl ||
+    !location
+  ) {
+    return res
+      .status(422)
+      .json({ error: "Please fill in all the fields properly" });
+  }
+
   try {
-    const requiredFields = [
-      "bio",
-      "job",
-      "address",
-      "city",
-      "country",
-      "zipcode",
-      "language",
-      "notification",
-      "facebookUrl",
-      "instagramUrl",
-      "twitterUrl",
-      "location",
-    ];
-
-    const missingFields = requiredFields.filter((field) => !req.body[field]);
-
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        error: `Missing required fields: ${missingFields.join(", ")}`,
-      });
-    }
-
-    const existingUser = await UserProfileModel.findOne({
-      $or: [
-        { bio: req.body.bio },
-        { job: req.body.job },
-        { address: req.body.address },
-        { city: req.body.city },
-        { country: req.body.country },
-        { zipcode: req.body.zipcode },
-        { notification: req.body.notification },
-        { facebookUrl: req.body.facebookUrl },
-        { instagramUrl: req.body.instagramUrl },
-        { twitterUrl: req.body.twitterUrl },
-      ],
+    // Create a new user profile object and save it
+    const userProfile = new UserProfileModel({
+      userId,
+      bio,
+      job,
+      address,
+      city,
+      country,
+      zipcode,
+      language,
+      notification,
+      role,
+      facebookUrl,
+      instagramUrl,
+      twitterUrl,
+      location,
     });
 
-    if (existingUser) {
-      return res.status(400).json({
-        error: "User profile with the same fields already exists",
-      });
+    if (userProfile) {
+      return res.status(400).json({ error: "Profile already exists" });
     }
 
-    const newUserProfile = new UserProfileModel(req.body);
-    const savedUserProfile = await newUserProfile.save();
+    await userProfile.save();
 
-    res.status(201).json(savedUserProfile);
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(201).json({ message: "Profile Created Successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to create profile" });
   }
 };
 
