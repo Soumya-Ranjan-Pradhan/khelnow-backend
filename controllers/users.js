@@ -7,26 +7,23 @@ const registerUser = async (req, res) => {
       lastName,
       email,
       mobile,
-      password,
-      avatarUrl,
       userName,
-      latestRefreshToken,
-      role,
-      deviceIds,
     } = req.body;
-
+// Convert field names to lowercase
+const lowercaseFieldNames = {
+  firstname: firstName,
+  lastname: lastName,
+  email: email,
+  mobile: mobile,
+  username: userName,
+};
     // Validate that all required fields are provided
     if (
       !firstName ||
       !lastName ||
       !email ||
       !mobile ||
-      !password ||
-      !avatarUrl ||
-      !userName ||
-      !latestRefreshToken ||
-      !role ||
-      !deviceIds
+      !userName
     ) {
       return res
         .status(422)
@@ -34,7 +31,7 @@ const registerUser = async (req, res) => {
     }
 
     // Check if a user with the same email already exists
-    const existingUser = await userModel.findOne({ email });
+    const existingUser = await userModel.findOne({ firstName, email, lastName, mobile, userName });
 
     if (existingUser) {
       return res
@@ -48,24 +45,17 @@ const registerUser = async (req, res) => {
       lastName,
       email,
       mobile,
-      password,
-      avatarUrl,
       userName,
-      latestRefreshToken,
-      role,
-      deviceIds,
     });
-    
     await newUser.save();
- 
-    const token = await newUser.generateAuthToken();
-    console.log(token)
-    res.status(201).json({ message: "User created successfully", token });
+
+    res.status(201).json({ message: "User created successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to create user" });
   }
 };
+
 
 // Read the user
 const getuserByid = async (req, res) => {

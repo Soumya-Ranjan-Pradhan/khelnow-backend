@@ -17,16 +17,13 @@ const UserSchema = new mongoose.Schema({
   },
   mobile: {
     type: String,
-    required: true,
-    unique: true,
   },
   password: {
     type: String,
-    required: true,
   },
   avatarUrl: {
     type: String,
-    required: true,
+
   },
   userName: {
     type: String,
@@ -35,11 +32,10 @@ const UserSchema = new mongoose.Schema({
   },
   latestRefreshToken: {
     type: String,
-    required: true,
   },
   role: {
     type: String,
-    required: true,
+
   },
   deviceIds: {
     deviceIds: {
@@ -66,7 +62,7 @@ const UserSchema = new mongoose.Schema({
   ],
 });
 
-UserSchema.index({ email: 1 }, { unique: false }); 
+UserSchema.index({ email: 1 }, { unique: true }); 
 UserSchema.index({ userName: 1 }, { unique: true });
 
 //we are generating token
