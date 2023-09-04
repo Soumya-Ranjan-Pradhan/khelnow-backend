@@ -7,16 +7,17 @@ import {
   updatesVideo,
   deleteVideos,
 } from "../controllers/videos.js";
+import verifyToken from '../middleware/verifyToken.js';
 
 
-router.post("/",createVideos);
+router.post("/", verifyToken, createVideos);
 
-router.get("/",AllVideos);
+router.get("/", verifyToken, AllVideos);
 
-router.get("/:id",getVideo);
+router.get("/:id", verifyToken, getVideo);
+ 
+router.put("/:id",verifyToken, updatesVideo);
 
-router.put("/:id",updatesVideo);
-
-router.delete("/:id",deleteVideos);
+router.delete("/:id",verifyToken, deleteVideos);
 
 export default router;

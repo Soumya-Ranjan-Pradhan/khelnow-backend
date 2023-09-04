@@ -7,15 +7,16 @@ import {
   updateCoaches,
   deleteCoaches,
 } from "../controllers/coaches.js";
+import verifyToken from "../middleware/verifyToken.js";
 
-router.post("/",createCoaches);
+router.post("/",verifyToken, createCoaches);
 
-router.get("/",getNewCoaches);
+router.get("/",verifyToken, getNewCoaches);
 
-router.get("/:id",getAllCoaches);
+router.get("/:id",verifyToken, getAllCoaches);
 
-router.put("/:id",updateCoaches);
+router.put("/:id",verifyToken, updateCoaches);
 
-router.delete("/:id",deleteCoaches);
+router.delete("/:id",verifyToken, deleteCoaches);
 
 export default router;

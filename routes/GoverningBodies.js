@@ -2,17 +2,18 @@ import express from "express";
 import {
     CreateGoverning , getAllGoverning, getGoverning, updateGoverning, deleteGovernig
 } from "../controllers/governigBodies.js"
+import verifyToken from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
-router.post("/",CreateGoverning);
+router.post("/", verifyToken, CreateGoverning);
 
-router.get("/", getAllGoverning);
+router.get("/", verifyToken, getAllGoverning);
 
-router.get("/:id", getGoverning);
+router.get("/:id", verifyToken, getGoverning);
 
-router.put("/:id", updateGoverning);
+router.put("/:id", verifyToken, updateGoverning);
 
-router.delete("/:id",deleteGovernig);
+router.delete("/:id",verifyToken, deleteGovernig);
 
 export default router;

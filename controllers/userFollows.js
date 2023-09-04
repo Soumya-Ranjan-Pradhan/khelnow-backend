@@ -2,6 +2,7 @@ import UserFollowsModel from "../model/UsersFollows.js";
 
 // User follow
 const follow = async (req, res) => {
+  
   try {
     const { followerId, followingId } = req.body;
 
