@@ -1,9 +1,9 @@
 import otpStorage from "../usersRoutes/otpStorage.js";
 
 const verify = (req, res) => {
+
   try {
     const { email, enteredOTP } = req.body;
-
     const isOTPValid = verifyOTP(email, enteredOTP);
 
     if (isOTPValid) {

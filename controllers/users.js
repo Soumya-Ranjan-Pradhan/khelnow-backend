@@ -1,36 +1,8 @@
 import userModel from "../model/Users.js";
 
-const registerUser = async (req, resp) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    mobile,
-    password,
-    avatarUrl,
-    userName,
-    latestRefreshToken,
-    role,
-  } = req.body;
-
-  if (
-    !firstName ||
-    !lastName ||
-    !email ||
-    !mobile ||
-    !password ||
-    !avatarUrl ||
-    !userName ||
-    !latestRefreshToken ||
-    !role
-  ) {
-    return resp
-      .status(422)
-      .json({ error: "please fill in all the fields properly" });
-  }
-
+const registerUser = async (req, res) => {
   try {
-    const userExist = await userModel.findOne({
+    const {
       firstName,
       lastName,
       email,
@@ -40,13 +12,38 @@ const registerUser = async (req, resp) => {
       userName,
       latestRefreshToken,
       role,
-    });
+      deviceIds,
+    } = req.body;
 
-    if (userExist) {
-      return resp.status(400).json({ error: "User already exists" });
+    // Validate that all required fields are provided
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !mobile ||
+      !password ||
+      !avatarUrl ||
+      !userName ||
+      !latestRefreshToken ||
+      !role ||
+      !deviceIds
+    ) {
+      return res
+        .status(422)
+        .json({ error: "Please fill in all the fields properly" });
     }
 
-    const user = new userModel({
+    // Check if a user with the same email already exists
+    const existingUser = await userModel.findOne({ email });
+
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ error: "User with this email already exists" });
+    }
+
+    // Create a new user instance
+    const newUser = new userModel({
       firstName,
       lastName,
       email,
@@ -56,14 +53,17 @@ const registerUser = async (req, resp) => {
       userName,
       latestRefreshToken,
       role,
+      deviceIds,
     });
-
-    await user.save();
-
-    resp.status(201).json({ message: "User registered successfully" });
+    
+    await newUser.save();
+ 
+    const token = await newUser.generateAuthToken();
+    console.log(token)
+    res.status(201).json({ message: "User created successfully", token });
   } catch (err) {
     console.error(err);
-    resp.status(500).json({ err: "Failed to register" });
+    res.status(500).json({ error: "Failed to create user" });
   }
 };
 
