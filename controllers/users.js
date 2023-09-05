@@ -9,14 +9,7 @@ const registerUser = async (req, res) => {
       mobile,
       userName,
     } = req.body;
-// Convert field names to lowercase
-const lowercaseFieldNames = {
-  firstname: firstName,
-  lastname: lastName,
-  email: email,
-  mobile: mobile,
-  username: userName,
-};
+
     // Validate that all required fields are provided
     if (
       !firstName ||

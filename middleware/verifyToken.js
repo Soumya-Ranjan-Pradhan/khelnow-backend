@@ -1,26 +1,31 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 const verifyToken = (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
 
-  if (!authorizationHeader || !authorizationHeader.startsWith('Bearer')) {
-    return res.status(401).json({ message: 'No token provided' });
+  if (!authorizationHeader || !authorizationHeader.startsWith("Bearer")) {
+    return res.status(401).json({ message: "No token provided" });
   }
 
-  const token = authorizationHeader.split(' ')[1];
+  const token = authorizationHeader.split(" ")[1];
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_TOKEN);
 
-    req.user = decoded.user;
+    const userId = decoded._id;
+    req.user = userId;
+
+    // const userId = decoded._id;
+    // const user = await UserModel.findById(userId);
+    // console.log(
+    //   "🚀 ~ file: verifyToken.js:16 ~ verifyToken ~ decoded:",
+    //   userId
+    // );
 
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Token is not valid' });
+    return res.status(401).json({ message: "Token is not valid" });
   }
 };
 
 export default verifyToken;
-
-
-

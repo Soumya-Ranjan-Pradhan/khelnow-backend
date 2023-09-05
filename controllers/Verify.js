@@ -1,9 +1,8 @@
 import otpStorage from "../usersRoutes/otpStorage.js";
 import UserModel from "../model/Users.js";
-import jwt from 'jsonwebtoken'; 
-import dotenv from 'dotenv';
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 dotenv.config();
-
 
 const verify = async (req, res) => {
   try {
@@ -13,7 +12,7 @@ const verify = async (req, res) => {
     if (isOTPValid) {
       const token = await generateAuthToken(email);
       console.log(token);
-      
+
       res.status(200).json({ message: "OTP verified successfully", token });
     } else {
       res.status(400).json({ message: "Invalid OTP" });
@@ -23,27 +22,27 @@ const verify = async (req, res) => {
   }
 };
 
-function verifyOTP(email, enteredOTP) {
+const verifyOTP = (email, enteredOTP) => {
   const actualOTP = otpStorage[email];
   return enteredOTP === actualOTP;
-}
+};
 
-async function generateAuthToken(email) {
+const generateAuthToken = async (email) => {
   try {
     const user = await UserModel.findOne({ email });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
-    const token = jwt.sign({ email: user.email }, process.env.JWT_TOKEN, {
-      expiresIn: '12h', 
+    const token = jwt.sign({ _id: user.id }, process.env.JWT_TOKEN, {
+      expiresIn: "12h",
     });
 
     return token;
   } catch (error) {
     throw error;
   }
-}
+};
 
 export default verify;
