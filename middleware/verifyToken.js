@@ -12,16 +12,11 @@ const verifyToken = (req, res, next) => {
   const token = authorizationHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_TOKEN);
-
-    const userId = decoded._id;
-    req.user = userId;
-
-    // const userId = decoded._id;
-    // const user = await UserModel.findById(userId);
+    const verified = jwt.verify(token, process.env.JWT_TOKEN);
+    req.user = { id: verified._id };
     // console.log(
     //   "🚀 ~ file: verifyToken.js:16 ~ verifyToken ~ decoded:",
-    //   userId
+    //   verified
     // );
 
     next();
