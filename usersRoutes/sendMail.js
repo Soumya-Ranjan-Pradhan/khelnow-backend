@@ -1,19 +1,14 @@
 import nodemailer from "nodemailer";
-import otpGenerator from "otp-generator";
 import otpStorage from "./otpStorage.js";
 
-function generateRandomString(length) {
-  let otp = "";
-  for (let i = 0; i < length; i++) {
-    otp += Math.floor(Math.random() * 10); 
-  }
-  return otp;
+const generateRandomString = (length) =>{
+  return Array.from({length}, () => Math.floor(Math.random() * 10)).join("")
 }
 
 const otp = generateRandomString(6);
 // console.log(otp);
 
-async function sendOTPEmail(toEmail) {
+const sendOTPEmail = async (toEmail) => {
   try {
     const otp = generateRandomString(6);
     otpStorage[toEmail] = otp;

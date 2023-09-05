@@ -1,8 +1,14 @@
-import otpStorage from "../usersRoutes/otpStorage.js";
-import UserModel from "../model/Users.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import UserModel from "../model/Users.js";
+import otpStorage from "../usersRoutes/otpStorage.js"; 
 dotenv.config();
+
+const generateAuthToken = (payload, secretKey, expiresIn) => {
+  return jwt.sign(payload, secretKey, {
+    expiresIn,
+  });
+};
 
 const verify = async (req, res) => {
   try {
@@ -10,10 +16,29 @@ const verify = async (req, res) => {
     const isOTPValid = verifyOTP(email, enteredOTP);
 
     if (isOTPValid) {
-      const token = await generateAuthToken(email);
-      console.log(token);
+      const user = await UserModel.findOne({ email });
 
-      res.status(200).json({ message: "OTP verified successfully", token });
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const accessToken = generateAuthToken(
+        { _id: user.id, email: user.email },
+        process.env.JWT_TOKEN,
+        "12h"
+      );
+
+      const refreshToken = generateAuthToken(
+        { _id: user.id, email: user.email },
+        process.env.REFRESH_TOKEN_SECRET,
+        "7d"
+      );
+
+      res.status(200).json({
+        message: "OTP verified successfully",
+        accessToken,
+        refreshToken,
+      });
     } else {
       res.status(400).json({ message: "Invalid OTP" });
     }
@@ -25,36 +50,6 @@ const verify = async (req, res) => {
 const verifyOTP = (email, enteredOTP) => {
   const actualOTP = otpStorage[email];
   return enteredOTP === actualOTP;
-}
-
-const generateAuthToken = async (email) => {
-  try {
-    const user = await UserModel.findOne({ email });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    const token = jwt.sign(
-      { _id: user.id, email: user.email },
-      process.env.JWT_TOKEN,
-      {
-        expiresIn: "12h",
-      }
-    );
-
-    const refreshToken = jwt.sign(
-      { _id: user.id, email: user.email },
-      process.env.REFRESH_TOKEN_SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
-
-    return {token,refreshToken};
-  } catch (error) {
-    throw error;
-  }
-}
+};
 
 export default verify;

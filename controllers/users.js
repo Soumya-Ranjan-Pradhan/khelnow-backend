@@ -2,37 +2,29 @@ import userModel from "../model/Users.js";
 
 const registerUser = async (req, res) => {
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      mobile,
-      userName,
-    } = req.body;
+    const { firstName, lastName, email, mobile, userName } = req.body;
 
-    // Validate that all required fields are provided
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !mobile ||
-      !userName
-    ) {
+    if (!firstName || !lastName || !email || !mobile || !userName) {
       return res
         .status(422)
         .json({ error: "Please fill in all the fields properly" });
     }
 
-    // Check if a user with the same email already exists
-    const existingUser = await userModel.findOne({ firstName, email, lastName, mobile, userName });
+    const existingUserByEmail = await userModel.findOne({ email });
+    const existingUserByUserName = await userModel.findOne({ userName });
 
-    if (existingUser) {
+    if (existingUserByEmail) {
       return res
         .status(400)
         .json({ error: "User with this email already exists" });
     }
 
-    // Create a new user instance
+    if (existingUserByUserName) {
+      return res
+        .status(400)
+        .json({ error: "User with this username already exists" });
+    }
+
     const newUser = new userModel({
       firstName,
       lastName,
