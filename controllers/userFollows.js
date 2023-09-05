@@ -50,7 +50,6 @@ const unfollow = async (req, res) => {
     });
     // console.log("🚀 ~ file: userFollows.js:44 ~ unfollow ~ result:", result);
 
-
     if (!result) {
       return res.status(400).json({ message: "User not following.",});
     }

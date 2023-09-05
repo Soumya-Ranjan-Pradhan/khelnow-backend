@@ -25,7 +25,7 @@ const verify = async (req, res) => {
 const verifyOTP = (email, enteredOTP) => {
   const actualOTP = otpStorage[email];
   return enteredOTP === actualOTP;
-};
+}
 
 const generateAuthToken = async (email) => {
   try {
@@ -35,14 +35,26 @@ const generateAuthToken = async (email) => {
       throw new Error("User not found");
     }
 
-    const token = jwt.sign({ _id: user.id }, process.env.JWT_TOKEN, {
-      expiresIn: "12h",
-    });
+    const token = jwt.sign(
+      { _id: user.id, email: user.email },
+      process.env.JWT_TOKEN,
+      {
+        expiresIn: "12h",
+      }
+    );
 
-    return token;
+    const refreshToken = jwt.sign(
+      { _id: user.id, email: user.email },
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    return {token,refreshToken};
   } catch (error) {
     throw error;
   }
-};
+}
 
 export default verify;
