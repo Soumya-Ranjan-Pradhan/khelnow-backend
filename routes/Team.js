@@ -1,16 +1,16 @@
 import express from "express";
 const router = express.Router();
 import {createTeams, getAllTeams, getTeams, updateTeams, deleteTeams} from "../controllers/teams.js";
-import verifyToken from "../middleware/verifyToken.js";
+// import verifyToken from "../middleware/verifyToken.js";
 
-router.post("/", verifyToken, createTeams);
+router.post("/", createTeams);
 
-router.get("/", verifyToken, getAllTeams);
+router.get("/", getAllTeams);
 
-router.get("/:id", verifyToken, getTeams);
+router.get("/:id", getTeams);
 
-router.put("/:id", verifyToken, updateTeams);
+router.put("/:id", updateTeams);
 
-router.delete("/:id", verifyToken, deleteTeams);
+router.delete("/:id", deleteTeams);
 
 export default router;

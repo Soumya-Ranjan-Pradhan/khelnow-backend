@@ -3,16 +3,16 @@ const router = express.Router();
 import {
     createCompetitions, getAllCompetitions, getCompetitions, updateCompetitions, deleteCompetitions
 } from "../controllers/competitions.js";
-import verifyToken from "../middleware/verifyToken.js";
+// import verifyToken from "../middleware/verifyToken.js";
 
-router.post("/", verifyToken, createCompetitions);
+router.post("/", createCompetitions);
 
-router.get("/", verifyToken, getAllCompetitions);
+router.get("/", getAllCompetitions);
 
-router.get("/:id", verifyToken, getCompetitions);
+router.get("/:id", getCompetitions);
 
-router.put("/:id", verifyToken, updateCompetitions);
+router.put("/:id", updateCompetitions);
 
-router.delete("/:id", verifyToken, deleteCompetitions);
+router.delete("/:id", deleteCompetitions);
 
 export default router;

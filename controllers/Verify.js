@@ -13,6 +13,7 @@ const verify = async (req, res) => {
     if (isOTPValid) {
       const token = await generateAuthToken(email);
       console.log(token);
+      
       res.status(200).json({ message: "OTP verified successfully", token });
     } else {
       res.status(400).json({ message: "Invalid OTP" });

@@ -7,18 +7,18 @@ import {
   updatePlayers,
   deletePlayers,
 } from "../controllers/players.js";
-import verifyToken from "../middleware/verifyToken.js";
+// import verifyToken from "../middleware/verifyToken.js";
 
-router.post("/", verifyToken, createPlayers);
+router.post("/", createPlayers);
 
-router.get("/", verifyToken, getAllPlayers);
+router.get("/", getAllPlayers);
 
-router.get("/:id", verifyToken, getPlayers);
+router.get("/:id", getPlayers);
 
-router.get("/:id", verifyToken, getAllPlayers);
+router.get("/:id", getAllPlayers);
 
-router.put("/:id", verifyToken, updatePlayers);
+router.put("/:id", updatePlayers);
 
-router.delete("/:id", verifyToken, deletePlayers);
+router.delete("/:id", deletePlayers);
 
 export default router;
