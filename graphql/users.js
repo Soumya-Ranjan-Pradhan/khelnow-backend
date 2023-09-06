@@ -3,7 +3,7 @@ import { gql } from "apollo-server-express";
 const typeDefs = gql`
   
   type User {
-    id:ID!
+    _id:ID!
     userName: String!
     lastName: String!
     email: String!
@@ -15,7 +15,6 @@ const typeDefs = gql`
   type Token {
     token: String!
   }
-
 
   input UserInput {
     firstName: String!
@@ -35,7 +34,6 @@ const typeDefs = gql`
     updateUser(id: ID!, input: UserInput!): User
     deleteUser(id: ID!): User
   }
-
 `;
 
 export { typeDefs };
