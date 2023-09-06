@@ -3,11 +3,28 @@ import userModel from "../model/Users.js";
 const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, mobile, userName } = req.body;
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "email",
+      "mobile",
+      "userName",
+    ];
+    const missingFields = requiredFields.filter((field) => !req.body[field]);
 
-    if (!firstName || !lastName || !email || !mobile || !userName) {
-      return res
-        .status(422)
-        .json({ error: "Please fill in all the fields properly" });
+    if (missingFields.length > 0) {
+      return res.status(422).json({
+        error: `Please fill in the following fields properly: ${missingFields.join(
+          ", "
+        )}`,
+      });
+    }
+    if (missingFields.length > 0) {
+      return res.status(422).json({
+        error: `Please fill in the following fields properly: ${missingFields.join(
+          ", "
+        )}`,
+      });
     }
 
     const existingUserByEmail = await userModel.findOne({ email });
@@ -40,7 +57,6 @@ const registerUser = async (req, res) => {
     res.status(500).json({ error: "Failed to create user" });
   }
 };
-
 
 // Read the user
 const getuserByid = async (req, res) => {
