@@ -4,7 +4,7 @@ const CompetitionsSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-  },
+  },  
   sportsType: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Sports",

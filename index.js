@@ -1,21 +1,30 @@
 // index.js
-import express from 'express';
-import dotenv from 'dotenv';
-import './config/db.js';
-import routes from './routes.js'; 
+import express from "express";
+import dotenv from "dotenv";
+import "./config/db.js";
+import routes from "./routes.js";
 const app = express();
+import { ApolloServer } from "apollo-server-express";
+import typeDefs from "./graphql/index.js";
 
 dotenv.config();
+app.use(express.json());
+app.use(routes);
 
-app.use((req, res, next) => {
-  console.log('Request Body:', req.body);
-  next();
+const serverStart = new ApolloServer({
+  typeDefs,
+  resolvers:{},
+  response: ({ req, res }) => ({
+    req,
+    res,
+  }),
 });
 
-
-app.use(express.json());
-
-app.use(routes);
+const Start = async () => {
+  await serverStart.start();
+  serverStart.applyMiddleware({ app });
+};
+Start();
 
 const port = process.env.PORT || 3000;
 
