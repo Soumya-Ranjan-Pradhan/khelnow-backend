@@ -4,31 +4,22 @@ import jwt from "jsonwebtoken";
 // User follow
 const follow = async (req, res) => {
   try {
-    // console.log(req.body)
     const { followingId } = req.body;
-
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.decode(token);
+    
+    // const userId = req.decodedToken.id;
 
     const existingFollow = await UserFollowsModel.findOne({
+      // userId,
       followingId,
     });
-    // console.log(
-    //   "🚀 ~ file: userFollows.js:12 ~ follow ~ existingFollow:",
-    //   existingFollow
-    // );
-
     if (existingFollow) {
       return res.status(400).json({ message: "User not following this." });
     }
 
     const newFollow = new UserFollowsModel({
-      userId: decodedToken.id,
+      // userId,
       followingId,
     });
-    // console.log("🚀 ~ file: userFollows.js:18 ~ follow ~ newFollow:", newFollow);
-    // console.log("🚀 ~ file: userFollows.js:18 ~ follow ~ userId:", decodedToken.id);
-
     await newFollow.save();
 
     return res.status(201).json({ message: "User following" });
@@ -38,16 +29,15 @@ const follow = async (req, res) => {
   }
 };
 
+
 // User unfollow
 const unfollow = async (req, res) => {
   try {
     const { followingId } = req.body;
-
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.decode(token);
+    // const userId = req.decodedToken.id;
 
     const result = await UserFollowsModel.findOneAndDelete({
-      userId: decodedToken.id,
+      // userId,
       followingId,
     });
     // console.log("🚀 ~ file: userFollows.js:44 ~ ~ result:", result);

@@ -3,10 +3,15 @@ import express from 'express';
 import dotenv from 'dotenv';
 import './config/db.js';
 import routes from './routes.js'; 
+const app = express();
 
 dotenv.config();
 
-const app = express();
+app.use((req, res, next) => {
+  console.log('Request Body:', req.body);
+  next();
+});
+
 
 app.use(express.json());
 

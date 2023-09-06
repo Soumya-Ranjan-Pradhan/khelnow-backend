@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import {createProfile, getProfile, updateProfile, deleteProfile } from "../controllers/userProfile.js";
-import verifyToken from "../middleware/verifyToken.js";
+import {verifyToken} from "../middleware/verifyToken.js";
 
 router.post("/", verifyToken, createProfile);
 

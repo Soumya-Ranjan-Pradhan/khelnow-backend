@@ -6,7 +6,6 @@ import {
   updateGoverning,
   deleteGovernig,
 } from "../controllers/governigBodies.js";
-import verifyToken from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
