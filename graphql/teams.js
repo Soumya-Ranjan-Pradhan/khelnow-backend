@@ -12,6 +12,11 @@ const Teams = gql`
     deletedAt: String
   }
 
+  type Sports {
+    _id: ID!
+    name: String!
+  }
+
   input TeamInput {
     name: String!
     sportsType: ID!
@@ -20,14 +25,14 @@ const Teams = gql`
   }
 
   type Query {
-    getAllTeams: [Team!]!
-    getTeamById(_id: ID!): Team
+    teams: [Team]
+    team(id: ID!): Team
   }
 
   type Mutation {
-    createTeam(teamInput: TeamInput!): Team!
-    updateTeam(_id: ID!, teamInput: TeamInput!): Team!
-    deleteTeam(_id: ID!): Team!
+    createTeam(input: TeamInput): Team
+    updateTeam(id: ID!, input: TeamInput): Team
+    deleteTeam(id: ID!): Team
   }
 `;
 
