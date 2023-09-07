@@ -6,6 +6,7 @@ import routes from "./routes.js";
 const app = express();
 import { ApolloServer } from "apollo-server-express";
 import typeDefs from "./graphql/index.js";
+import resolvers from "./resolver/index.js"
 
 dotenv.config();
 app.use(express.json());
@@ -13,7 +14,7 @@ app.use(routes);
 
 const serverStart = new ApolloServer({
   typeDefs,
-  resolvers:{},
+  resolvers,
   response: ({ req, res }) => ({
     req,
     res,
