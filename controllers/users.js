@@ -19,14 +19,7 @@ const registerUser = async (req, res) => {
         )}`,
       });
     }
-    if (missingFields.length > 0) {
-      return res.status(422).json({
-        error: `Please fill in the following fields properly: ${missingFields.join(
-          ", "
-        )}`,
-      });
-    }
-
+   
     const existingUserByEmail = await userModel.findOne({ email });
     const existingUserByUserName = await userModel.findOne({ userName });
 

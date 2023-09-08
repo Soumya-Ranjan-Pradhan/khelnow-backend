@@ -41,6 +41,7 @@ const getAllTeams = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Could not fetch teams" });
   }
+  
 };
 
 // Get a single team

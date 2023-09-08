@@ -12,10 +12,6 @@ const typeDefs = gql`
     completed: Boolean
   }
 
-  type Token {
-    token: String!
-  }
-
   input UserInput {
     firstName: String!
     lastName: String!

@@ -1,4 +1,5 @@
 import UserProfileModel from "../model/UserProfile.js";
+import {UserInputError} from "apollo-server-express"
 
 const resolvers = {
   Query: {
@@ -7,7 +8,7 @@ const resolvers = {
         const userProfile = await UserProfileModel.findOne({ userId });
         return userProfile;
       } catch (error) {
-        throw new Error("Fetching user profile");
+        throw new UserInputError(err.message || "Fetching user profile");
       }
     },
   },
@@ -18,7 +19,7 @@ const resolvers = {
         await userProfile.save();
         return userProfile;
       } catch (error) {
-        throw new Error("Error creating user profile");
+        throw new UserInputError(err.message || "Error creating user profile");
       }
     },
     updateProfile: async (_, { userId, userProfileInput }) => {
@@ -29,22 +30,22 @@ const resolvers = {
           { new: true }
         );
         if (!userProfile) {
-          throw new Error("User profile not found");
+          throw new UserInputError("User profile not found");
         }
         return userProfile;
       } catch (error) {
-        throw new Error("Error updating user profile");
+        throw new UserInputError(err.message || "Error updating user profile");
       }
     },
     deleteProfile: async (_, { userId }) => {
       try {
         const userProfile = await UserProfileModel.findOneAndDelete({ userId });
         if (!userProfile) {
-          throw new Error("User profile not found");
+          throw new UserInputError("User profile not found");
         }
         return userProfile;
       } catch (error) {
-        throw new Error("Error deleting user profile");
+        throw new UserInputError(err.message || "Error deleting user profile");
       }
     },
   },

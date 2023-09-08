@@ -5,11 +5,8 @@ import jwt from "jsonwebtoken";
 const follow = async (req, res) => {
   try {
     const { followingId } = req.body;
-    
-    // const userId = req.decodedToken.id;
 
     const existingFollow = await UserFollowsModel.findOne({
-      // userId,
       followingId,
     });
     if (existingFollow) {
@@ -17,7 +14,6 @@ const follow = async (req, res) => {
     }
 
     const newFollow = new UserFollowsModel({
-      // userId,
       followingId,
     });
     await newFollow.save();

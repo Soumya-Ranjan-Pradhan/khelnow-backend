@@ -8,7 +8,7 @@ const createProfile = async (req, res) => {
     job,
     address,
     city,
-    country,
+    country,  
     zipcode,
     language,
     notification,
