@@ -8,7 +8,7 @@ const teamsResolvers = {
         const teams = await TeamModel.find();
         return teams;
       } catch (err) {
-        throw new UserInputError(err.message);
+        throw new UserInputError(err.message || "team not get");
       }
     },
 

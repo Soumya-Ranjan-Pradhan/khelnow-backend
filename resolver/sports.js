@@ -5,10 +5,10 @@ const Players = {
   Query: {
     getAllPlayers: async () => {
       try {
-        const players = await PlayersModel.find().populate("sportsType");
+        const players = await PlayersModel.find();
         return players;
       } catch (err) {
-        throw new UserInputError(err.message);
+        throw new UserInputError(err.message || "Failed to fetch players");
       }
     },
     getPlayerById: async (_, { _id }) => {
