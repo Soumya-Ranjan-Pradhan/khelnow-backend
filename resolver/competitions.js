@@ -6,34 +6,43 @@ const competitionsResolvers = {
     competition: async () => {
       try {
         const competition = await CompetitionsModel.find();
+        // console.log("competitions", competition)
         return competition;
       } catch (err) {
         throw new UserInputError(err.message || "competitions not get");
       }
     },
-    competitions: async (_, { id }) => {
+    competition: async (_, { id }) => {
       try {
-        const competitions = await CompetitionsModel.findById(id);
-        if (!competitions) {
-          throw new UserInputError("competitions not found");
+        const competition = await CompetitionsModel.findById(id);
+        if (!competition) {
+          throw new UserInputError("Competition not found");
         }
-        return competitions;
+        return competition;
       } catch (err) {
-        throw new UserInputError(err.message || "no create competitions");
+        throw new UserInputError(err.message || "Failed to fetch competition");
       }
-    },
+    },    
   },
   Mutation: {
     createCompetition: async (_, { input }) => {
       try {
+        const existingCompetition = await CompetitionsModel.findOne({
+          name: input.name,
+        });
+
+        if (existingCompetition) {
+          throw new UserInputError("Competition already exists");
+        }
         const newCompetition = await CompetitionsModel.create(input);
         return newCompetition;
       } catch (error) {
         throw new UserInputError(
-          error.message || "failed to create competitions"
+          error.message || "Failed to create competition"
         );
       }
     },
+
     updateCompetition: async (_, { id, input }) => {
       try {
         const updatedCompetition = await CompetitionsModel.findByIdAndUpdate(
@@ -53,7 +62,9 @@ const competitionsResolvers = {
     },
     deleteCompetition: async (_, { id }) => {
       try {
-        const deletedCompetition = await CompetitionsModel.findByIdAndRemove(id);
+        const deletedCompetition = await CompetitionsModel.findByIdAndRemove(
+          id
+        );
         if (!deletedCompetition) {
           throw new UserInputError("Competition not found");
         }

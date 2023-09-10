@@ -1,6 +1,11 @@
-import { gql } from 'apollo-server-express';
+import { gql } from "apollo-server-express";
 
 const Players = gql`
+  type Sports {
+    _id: ID!
+    name: String!
+  }
+
   type Player {
     _id: ID!
     name: String!
@@ -17,7 +22,8 @@ const Players = gql`
     FOOTBALL
     BADMINTON
     TENNIS
-    TABLE TENNIS
+    TABLE
+    TENNIS
     HOCKEY
     WWE
   }
@@ -30,14 +36,14 @@ const Players = gql`
   }
 
   type Query {
-    getAllPlayers: [Player!]!
-    getPlayerById(_id: ID!): Player
-  }
+  getPlayers: [Player]
+  getPlayerById(id: ID!): Player
+}
 
   type Mutation {
-    createPlayer(playerInput: PlayerInput!): Player!
-    updatePlayer(_id: ID!, playerInput: PlayerInput!): Player!
-    deletePlayer(_id: ID!): Player
+    createPlayer(playerInput: PlayerInput!): Player
+    updatePlayer(id: ID!, playerInput: PlayerInput!): Player
+    deletePlayer(id: ID!): Player
   }
 `;
 

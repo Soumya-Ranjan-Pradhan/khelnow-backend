@@ -27,12 +27,22 @@ const videosResolver = {
   Mutation: {
     createVideo: async (_, { input }) => {
       try {
+        const existingVideo = await videosModel.findOne({
+          videoUrl: input.videoUrl
+          // $or: [{ videoUrl: input.videoUrl }, { caption: input.caption }],
+        });
+    
+        if (existingVideo) {
+          throw new UserInputError("Video already exists");
+        }
+    
         const newVideo = await videosModel.create(input);
         return newVideo;
       } catch (error) {
         throw new UserInputError(`Failed to create video: ${error.message}`);
       }
     },
+    
 
     updateVideo: async (_, { id, input }) => {
       try {

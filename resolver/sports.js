@@ -1,78 +1,76 @@
-import PlayersModel from "../model/Players.js";
+import SportsModel from "../model/Sports.js";
 import { UserInputError } from "apollo-server-express";
 
-const Players = {
+const SportsResolvers = {
   Query: {
-    getAllPlayers: async () => {
+    getAllSports: async () => {
       try {
-        const players = await PlayersModel.find();
-        return players;
+        const sports = await SportsModel.find();
+        return sports;
       } catch (err) {
-        throw new UserInputError(err.message || "Failed to fetch players");
+        throw new UserInputError(err.message || "Failed to fetch sports");
       }
     },
-    getPlayerById: async (_, { _id }) => {
+    getSportsById: async (_, { id }) => {
       try {
-        const player = await PlayersModel.findById(_id);
-        if (!player) {
-          throw new UserInputError("Player not found");
+        const sports = await SportsModel.findById(id);
+        if (!sports) {
+          throw new UserInputError("Sports not found");
         }
-        return player;
+        return sports;
       } catch (err) {
-        throw new UserInputError(err.message || "not create players");
+        throw new UserInputError(err.message || "not create Sports");
       }
     },
   },
   Mutation: {
-    createPlayer: async (_, { playerInput }) => {
+    createSports: async (_, { sportsInput }) => {
       try {
-        const playerExist = await PlayersModel.findOne({
-          name: playerInput.name,
-          slug: playerInput.slug,
-          sportsType: playerInput.sportsType,
-          avatarUrl: playerInput.avatarUrl,
-        });
-
-        if (playerExist) {
-          throw new UserInputError("Player already exists");
+        const existingSports = await SportsModel.findOne({ name: sportsInput.name, slug: sportsInput.slug });
+    
+        if (existingSports) {
+          throw new UserInputError('Sports entry with this data already exists');
         }
-
-        const newPlayer = new PlayersModel(playerInput);
-        const savedPlayer = await newPlayer.save();
-        return savedPlayer;
+    
+        const newSports = await SportsModel.create(sportsInput);
+        return newSports;
       } catch (err) {
-        throw new UserInputError(err.message || "Failed to create Player");
+        console.error("Error in createSports resolver:", err);
+        throw new UserInputError(err.message || 'Failed to create Sports');
       }
     },
-    updatePlayer: async (_, { _id, playerInput }) => {
+    
+
+    updatePlayer: async (_, { id, sportsInput }) => {
       try {
-        const updatedPlayer = await PlayersModel.findByIdAndUpdate(
-          _id,
-          playerInput,
+        const updatedSports = await SportsModel.findByIdAndUpdate(
+          id,
+          sportsInput,
           { new: true }
         );
 
-        if (!updatedPlayer) {
-          throw new UserInputError("Player not found");
+        if (!updatedSports) {
+          throw new UserInputError("Sports not found");
         }
 
-        return updatedPlayer;
+        return updatedSports;
       } catch (err) {
-        throw new UserInputError(err.message || "Failed to update Player");
+        throw new UserInputError(err.message || "Failed to update Sports");
       }
     },
-    deletePlayer: async (_, { _id }) => {
+
+    deletePlayer: async (_, { id }) => {
       try {
-        const deletedPlayer = await PlayersModel.findByIdAndRemove(_id);
-        if (!deletedPlayer) {
-          throw new UserInputError("Player not found");
+        const deletedSports = await SportsModel.findByIdAndRemove(id);
+        if (!deletedSports) {
+          throw new UserInputError("Sports not found");
         }
-        return deletedPlayer;
+        return deletedSports;
       } catch (err) {
-        throw new UserInputError(err.message || "Failed to delete Player");
+        throw new UserInputError(err.message || "Failed to delete Sports");
       }
     },
   },
 };
 
-export default Players;
+export default SportsResolvers;

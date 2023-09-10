@@ -1,5 +1,4 @@
-import UserProfileModel from "../model/UserProfile.js";
-import {UserInputError} from "apollo-server-express"
+import UserProfileModel from '../model/UserProfile.js';
 
 const resolvers = {
   Query: {
@@ -8,20 +7,39 @@ const resolvers = {
         const userProfile = await UserProfileModel.findOne({ userId });
         return userProfile;
       } catch (error) {
-        throw new UserInputError(err.message || "Fetching user profile");
+        throw new Error('Failed to fetch user profile');
+      }
+    },
+    getAllUserProfiles: async () => {
+      try {
+        const userProfiles = await UserProfileModel.find();
+        return userProfiles;
+      } catch (error) {
+        throw new Error('Failed to fetch user profiles');
       }
     },
   },
   Mutation: {
     createProfile: async (_, { userProfileInput }) => {
       try {
+      
+        const existingUserProfile = await UserProfileModel.findOne({
+          userId: userProfileInput.userId,
+        });
+    
+        if (existingUserProfile) {
+          throw new Error('User profile with this userId already exists');
+        }
+    
         const userProfile = new UserProfileModel(userProfileInput);
         await userProfile.save();
         return userProfile;
-      } catch (error) {
-        throw new UserInputError(err.message || "Error creating user profile");
+      } catch (err) {
+        throw new Error(err.message || 'Failed to create user profile');
       }
     },
+    
+    
     updateProfile: async (_, { userId, userProfileInput }) => {
       try {
         const userProfile = await UserProfileModel.findOneAndUpdate(
@@ -30,22 +48,22 @@ const resolvers = {
           { new: true }
         );
         if (!userProfile) {
-          throw new UserInputError("User profile not found");
+          throw new Error('User profile not found');
         }
         return userProfile;
       } catch (error) {
-        throw new UserInputError(err.message || "Error updating user profile");
+        throw new Error('Failed to update user profile');
       }
     },
     deleteProfile: async (_, { userId }) => {
       try {
         const userProfile = await UserProfileModel.findOneAndDelete({ userId });
         if (!userProfile) {
-          throw new UserInputError("User profile not found");
+          throw new Error('User profile not found');
         }
         return userProfile;
       } catch (error) {
-        throw new UserInputError(err.message || "Error deleting user profile");
+        throw new Error('Failed to delete user profile');
       }
     },
   },

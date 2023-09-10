@@ -1,4 +1,4 @@
-import coachesModel from "../model/GoverningBodies.js";
+import coachesModel from "../model/Coaches.js";
 import { UserInputError } from "apollo-server-express";
 
 const coachesResolver = {
@@ -31,12 +31,19 @@ const coachesResolver = {
   Mutation: {
     createCoach: async (_, { input }) => {
       try {
+        const existingCoach = await coachesModel.findOne({ name: input.name });
+    
+        if (existingCoach) {
+          throw new UserInputError("Coach already exists");
+        }
+    
         const newCoach = await coachesModel.create(input);
         return newCoach;
       } catch (error) {
         throw new UserInputError(`Failed to create coach: ${error.message}`);
       }
     },
+    
 
     updateCoach: async (_, { id, input }) => {
       try {

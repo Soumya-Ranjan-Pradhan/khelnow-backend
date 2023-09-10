@@ -26,12 +26,19 @@ const governingBodies = {
   Mutation: {
     createGoverningBody: async (_, { input }) => {
       try {
+        const existingGoverningBody = await GoverningBodiesSchemaModel.findOne({ name: input.name });
+    
+        if (existingGoverningBody) {
+          throw new UserInputError("Governing body already exists");
+        }
+    
         const newGoverningBody = await GoverningBodiesSchemaModel.create(input);
         return newGoverningBody;
       } catch (error) {
         throw new UserInputError(`Failed to create governing body: ${error.message}`);
       }
     },
+    
     updateGoverningBody: async (_, { id, input }) => {
       try {
         const updatedGoverningBody = await GoverningBodiesSchemaModel.findByIdAndUpdate(

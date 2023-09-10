@@ -1,25 +1,38 @@
-import { gql } from "apollo-server-express";
+import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
-  
-  type User {
-    _id:ID!
-    userName: String!
+    type User {
+    id: ID!
+    firstName: String!
     lastName: String!
     email: String!
-    firstName: String!
-    mobile: String!
-    completed: Boolean
+    mobile: String
+    password: String
+    avatarUrl: String
+    userName: String!
+    latestRefreshToken: String
+    role: String
+    deviceIds: [String]
+    createdAt: String
+    deletedAt: String
+    tokens: [Token]
   }
-
+  type Token {
+  tokenValue: String
+}
   input UserInput {
     firstName: String!
     lastName: String!
     email: String!
     mobile: String
+    password: String
+    avatarUrl: String
     userName: String!
+    latestRefreshToken: String
+    role: String
+    deviceIds: [String]
   }
-  
+
   type Query {
     getUser(id: ID!): User
     getUsers: [User]

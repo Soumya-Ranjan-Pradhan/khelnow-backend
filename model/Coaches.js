@@ -26,6 +26,7 @@ const coachesSchema = new mongoose.Schema({
 
 coachesSchema.index({ name: 1 }, { unique: true });
 coachesSchema.index({ slug: 1 }, { unique: true });
+coachesSchema.index({ sportsType: 1 }, { unique: true });
 
 const coachesModel = mongoose.model("Coaches", coachesSchema);
 

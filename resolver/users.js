@@ -5,48 +5,61 @@ const createUser = {
   Query: {
     getUser: async (_, { id }) => {
       try {
-        const user = await userModel.findById(id);
-        return user;
+        return await userModel.findById(id);
       } catch (error) {
-        throw new UserInputError(err.message || "Failed to fetch user");
+        throw new UserInputError("Failed to fetch user", { error });
       }
     },
     getUsers: async () => {
       try {
-        const users = await userModel.find();
-        return users;
+        return await userModel.find();
       } catch (error) {
-        throw new UserInputError(err.message || "Failed to fetch users");
+        throw new UserInputError("Failed to fetch users", { error });
       }
     },
   },
   Mutation: {
     createUser: async (_, { input }) => {
       try {
-        const userProfile = new userModel(input);
-        await userProfile.save();
-        return userProfile;
-      } catch (error) {
-        throw new UserInputError(err.message || "Error creating user profile");
+        const [existingUserByEmail, existingUserByUserName] = await Promise.all(
+          [
+            userModel.findOne({ email: input.email }),
+            userModel.findOne({ userName: input.userName }),
+          ]
+        );
+
+        if (existingUserByEmail || existingUserByUserName) {
+          throw new UserInputError(
+            "User with this email or username already exists"
+          );
+        }
+
+        const newUser = new userModel(input);
+        await newUser.save();
+        return newUser;
+      } catch (err) {
+        console.error("Error creating user:", err);
+        throw new UserInputError("Failed to create user", { error: err });
       }
     },
+
     updateUser: async (_, { id, input }) => {
       try {
         const updatedUser = await userModel.findByIdAndUpdate(id, input, {
           new: true,
         });
-    
+
         if (!updatedUser) {
           throw new UserInputError("User not found");
         }
-    
+
         return updatedUser;
       } catch (error) {
         console.error("Error updating user:", error);
-        throw new UserInputError(err.message || "Failed to update user");
+        throw new UserInputError("Failed to update user", { error });
       }
     },
-    
+
     deleteUser: async (_, { id }) => {
       try {
         const deletedUser = await userModel.findByIdAndDelete(id);
@@ -57,7 +70,8 @@ const createUser = {
 
         return { message: "User deleted successfully" };
       } catch (error) {
-        throw new UserInputError(err.message || "Failed to delete user");
+        console.error("Error deleting user:", error);
+        throw new UserInputError("Failed to delete user", { error });
       }
     },
   },
