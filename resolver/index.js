@@ -8,6 +8,8 @@ import governingResolvers from "../resolver/governingBodies.js";
 import coachesResolver from "../resolver/coaches.js"
 import videosResolver from "../resolver/videos.js"
 import playersResolvers from "../resolver/players.js"
+import verifyResolvers from "../resolver/otp.js";
+import otpResolvers from "../resolver/verifyOtp.js"
 
 const allResolvers = [
   resolvers,
@@ -19,6 +21,8 @@ const allResolvers = [
   competitionsResolvers,
   governingResolvers,
   coachesResolver,
-  videosResolver
+  videosResolver,
+  verifyResolvers,
+  otpResolvers
 ];
 export default allResolvers;

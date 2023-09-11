@@ -26,12 +26,14 @@ const governingBodies = {
   Mutation: {
     createGoverningBody: async (_, { input }) => {
       try {
+        // Check if a governing body with the same name exists
         const existingGoverningBody = await GoverningBodiesSchemaModel.findOne({ name: input.name });
     
         if (existingGoverningBody) {
           throw new UserInputError("Governing body already exists");
         }
     
+
         const newGoverningBody = await GoverningBodiesSchemaModel.create(input);
         return newGoverningBody;
       } catch (error) {
