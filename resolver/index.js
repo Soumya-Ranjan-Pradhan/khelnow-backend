@@ -1,6 +1,6 @@
 import resolvers from "../resolver/userProfile.js";
 import createUser from "../resolver/users.js";
-import userFollows from "../resolver/userFollows.js";
+import userFollowsResolvers from "../resolver/userFollows.js";
 import SportsResolvers from "../resolver/sports.js";
 import teamsResolvers from "../resolver/teams.js";
 import competitionsResolvers from "../resolver/competitions.js";
@@ -14,7 +14,7 @@ import otpResolvers from "../resolver/verifyOtp.js"
 const allResolvers = [
   resolvers,
   createUser,
-  userFollows,
+  userFollowsResolvers,
   SportsResolvers,
   teamsResolvers,
   playersResolvers,

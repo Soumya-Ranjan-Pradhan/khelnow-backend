@@ -1,5 +1,6 @@
 import SportsModel from "../model/Sports.js";
 import { UserInputError } from "apollo-server-express";
+import {} from "../middleware/verifyToken.js"
 
 const SportsResolvers = {
   Query: {
@@ -11,8 +12,9 @@ const SportsResolvers = {
         throw new UserInputError(err.message || "Failed to fetch sports");
       }
     },
-    getSportsById: async (_, { id }) => {
+    getSportsById: async (_, { id },context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const sports = await SportsModel.findById(id);
         if (!sports) {
           throw new UserInputError("Sports not found");
@@ -24,8 +26,9 @@ const SportsResolvers = {
     },
   },
   Mutation: {
-    createSports: async (_, { sportsInput }) => {
+    createSports: async (_, { sportsInput }, context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const existingSports = await SportsModel.findOne({ name: sportsInput.name, slug: sportsInput.slug });
     
         if (existingSports) {
@@ -41,8 +44,9 @@ const SportsResolvers = {
     },
     
 
-    updatePlayer: async (_, { id, sportsInput }) => {
+    updatePlayer: async (_, { id, sportsInput },context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const updatedSports = await SportsModel.findByIdAndUpdate(
           id,
           sportsInput,
@@ -59,8 +63,9 @@ const SportsResolvers = {
       }
     },
 
-    deletePlayer: async (_, { id }) => {
+    deletePlayer: async (_, { id },context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const deletedSports = await SportsModel.findByIdAndRemove(id);
         if (!deletedSports) {
           throw new UserInputError("Sports not found");

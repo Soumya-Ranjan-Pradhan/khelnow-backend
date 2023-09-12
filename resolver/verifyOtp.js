@@ -1,4 +1,4 @@
-// Import necessary modules and dependencies
+
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import userModel from "../model/Users.js";

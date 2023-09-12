@@ -1,34 +1,49 @@
-// index.js
 import express from "express";
 import dotenv from "dotenv";
 import "./config/db.js";
 import routes from "./routes.js";
-const app = express();
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, AuthenticationError } from "apollo-server-express";
 import typeDefs from "./graphql/index.js";
-import resolvers from "./resolver/index.js"
+import resolvers from "./resolver/index.js";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
+const app = express();
+
 app.use(express.json());
 app.use(routes);
 
-const serverStart = new ApolloServer({
-  typeDefs,
-  resolvers,
-  response: ({ req, res }) => ({
-    req,
-    res,
-  }),
-});
+const serverStart = async () => {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req }) => {
+      const token = req.headers.authorization?.split(' ')[1];
+      if (token) {
+        try {
+          const decoded = jwt.verify(token, process.env.JWT_TOKEN);
+          return {
+            userId: decoded._id,
+          };
+        } catch (error) {
+          throw new AuthenticationError('Invalid token');
+        }
+      }
+      return {};
+    },
+  });
 
-const Start = async () => {
-  await serverStart.start();
-  serverStart.applyMiddleware({ app });
+  await server.start();
+
+  server.applyMiddleware({ app });
+
+  const port = process.env.PORT || 3000;
+
+  app.listen(port, () => {
+    console.log(`Backend server is running on port ${port}`);
+  });
 };
-Start();
 
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  console.log(`Backend server is running on port ${port}`);
+serverStart().catch((error) => {
+  console.error("Error starting server:", error);
 });

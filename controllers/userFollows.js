@@ -1,7 +1,7 @@
 
 import UserFollowsModel from "../model/UsersFollows.js";
 import jwt from "jsonwebtoken";
-// User follow
+
 const follow = async (req, res) => {
   try {
     const { followingId } = req.body;

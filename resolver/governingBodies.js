@@ -11,8 +11,9 @@ const governingBodies = {
         throw new UserInputError(`Failed to fetch governing bodies: ${error.message}`);
       }
     },
-    governingBody: async (_, { id }) => {
+    governingBody: async (_, { id }, context) => {
       try {
+        await verifyToken(context.req, context.res,() => { }); 
         const governingBody = await GoverningBodiesSchemaModel.findById(id);
         if (!governingBody) {
           throw new UserInputError('Governing Body not found');
@@ -24,8 +25,9 @@ const governingBodies = {
     },
   },
   Mutation: {
-    createGoverningBody: async (_, { input }) => {
+    createGoverningBody: async (_, { input },context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         // Check if a governing body with the same name exists
         const existingGoverningBody = await GoverningBodiesSchemaModel.findOne({ name: input.name });
     
@@ -41,8 +43,9 @@ const governingBodies = {
       }
     },
     
-    updateGoverningBody: async (_, { id, input }) => {
+    updateGoverningBody: async (_, { id, input }, context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const updatedGoverningBody = await GoverningBodiesSchemaModel.findByIdAndUpdate(
           id,
           input,
@@ -58,8 +61,9 @@ const governingBodies = {
         throw new UserInputError(`Failed to update governing body: ${error.message}`);
       }
     },
-    deleteGoverningBody: async (_, { id }) => {
+    deleteGoverningBody: async (_, { id },context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const deletedGoverningBody = await GoverningBodiesSchemaModel.findByIdAndRemove(
           id
         );

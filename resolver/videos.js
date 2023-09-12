@@ -1,5 +1,6 @@
 import videosModel from "../model/Videos.js";
 import { UserInputError } from "apollo-server-express";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 const videosResolver = {
   Query: {
@@ -11,8 +12,9 @@ const videosResolver = {
         throw new UserInputError(`Failed to fetch videos: ${error.message}`);
       }
     },
-    video: async (_, { id }) => {
+    video: async (_, { id }, context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const video = await videosModel.findById(id);
         if (!video) {
           throw new UserInputError("Video not found");
@@ -25,11 +27,14 @@ const videosResolver = {
   },
 
   Mutation: {
-    createVideo: async (_, { input }) => {
+    createVideo: async (_, { input }, context) => {
       try {
+        const userId = context.userId; 
+        console.log("🚀 ~ file: videos.js:33 ~ createVideo: ~ userId:", userId)
+        input.userId = userId;
+    
         const existingVideo = await videosModel.findOne({
-          videoUrl: input.videoUrl
-          // $or: [{ videoUrl: input.videoUrl }, { caption: input.caption }],
+          videoUrl: input.videoUrl,
         });
     
         if (existingVideo) {
@@ -37,15 +42,17 @@ const videosResolver = {
         }
     
         const newVideo = await videosModel.create(input);
+        newVideo.userId = userId;
+        console.log("🚀 ~ file: videos.js:46 ~ createVideo: ~ newVideo:", newVideo)
         return newVideo;
       } catch (error) {
         throw new UserInputError(`Failed to create video: ${error.message}`);
       }
     },
-    
 
     updateVideo: async (_, { id, input }) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const updatedVideo = await videosModel.findByIdAndUpdate(id, input, {
           new: true,
         });
@@ -60,6 +67,7 @@ const videosResolver = {
 
     deleteVideo: async (_, { id }) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const deletedVideo = await videosModel.findByIdAndRemove(id);
         if (!deletedVideo) {
           throw new UserInputError("Video not found");

@@ -1,5 +1,6 @@
 import coachesModel from "../model/Coaches.js";
 import { UserInputError } from "apollo-server-express";
+import {verifyToken} from "../middleware/verifyToken.js"
 
 const coachesResolver = {
   Query: {
@@ -13,8 +14,9 @@ const coachesResolver = {
         );
       }
     },
-    coach: async (_, { id }) => { 
+    coach: async (_, { id }, context) => { 
       try {
+        await verifyToken(context.req, context.res, () => {}); 
         const getCoach = await coachesModel.findById(id);
         if (!getCoach) {
           throw new UserInputError("Coach not found");
@@ -29,8 +31,9 @@ const coachesResolver = {
   },
 
   Mutation: {
-    createCoach: async (_, { input }) => {
+    createCoach: async (_, { input }, context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const existingCoach = await coachesModel.findOne({ name: input.name });
     
         if (existingCoach) {
@@ -45,8 +48,9 @@ const coachesResolver = {
     },
     
 
-    updateCoach: async (_, { id, input }) => {
+    updateCoach: async (_, { id, input },context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});
         const updatedCoach = await coachesModel.findByIdAndUpdate(
           id,
           input,
@@ -63,8 +67,9 @@ const coachesResolver = {
       }
     },
 
-    deleteCoach: async (_, { id }) => {
+    deleteCoach: async (_, { id }, context) => {
       try {
+        await verifyToken(context.req, context.res, () => {});  
         const deletedCoach = await coachesModel.findByIdAndRemove(
           id
         );
