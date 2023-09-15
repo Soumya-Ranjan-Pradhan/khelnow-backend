@@ -21,19 +21,19 @@ const createUser = {
   Mutation: {
     createUser: async (_, { input }) => {
       try {
-        const [existingUserByEmail, existingUserByUserName] = await Promise.all(
-          [
-            userModel.findOne({ email: input.email }),
-            userModel.findOne({ userName: input.userName }),
-          ]
-        );
-
-        if (existingUserByEmail || existingUserByUserName) {
-          throw new UserInputError(
-            "User with this email or username already exists"
-          );
+        const [existingUserByEmail, existingUserByUserName] = await Promise.all([
+          userModel.findOne({ email: input.email }),
+          userModel.findOne({ userName: input.userName }),
+        ]);
+  
+        if (existingUserByEmail) {
+          throw new UserInputError("User with this email already exists");
         }
-
+  
+        if (existingUserByUserName) {
+          throw new UserInputError("User with this username already exists");
+        }
+  
         const newUser = new userModel(input);
         await newUser.save();
         return newUser;

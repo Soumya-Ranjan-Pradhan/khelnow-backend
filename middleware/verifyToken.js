@@ -18,7 +18,7 @@ const verifyToken = (req, res, next) => {
     const verified = jwt.verify(token, process.env.JWT_TOKEN);
   console.log(verified)
 
-    req.user = { id: verified._id };
+    req.user = { id: verified.id };
   
     next();
   } catch (error) {

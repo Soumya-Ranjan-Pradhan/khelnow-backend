@@ -1,19 +1,22 @@
 import CompetitionsModel from "../model/Competitions.js";
 import { UserInputError } from "apollo-server-express";
+import { verifyToken } from "../middleware/verifyToken.js"; 
 
 const competitionsResolvers = {
   Query: {
-    competition: async () => {
+    competition: async (_, __, context) => {
       try {
-        const competition = await CompetitionsModel.find();
-        // console.log("competitions", competition)
-        return competition;
+        await verifyToken(context.req, context.res,() => { }); 
+        const competitions = await CompetitionsModel.find();
+        return competitions;
       } catch (err) {
-        throw new UserInputError(err.message || "competitions not get");
+        throw new UserInputError(err.message || "Competitions not get");
       }
     },
-    competition: async (_, { id }) => {
+
+    competition: async (_, { id }, context) => {
       try {
+        await verifyToken(context.req, context.res,() => { }); // Use the middleware here
         const competition = await CompetitionsModel.findById(id);
         if (!competition) {
           throw new UserInputError("Competition not found");
@@ -22,11 +25,13 @@ const competitionsResolvers = {
       } catch (err) {
         throw new UserInputError(err.message || "Failed to fetch competition");
       }
-    },    
+    },
   },
+
   Mutation: {
-    createCompetition: async (_, { input }) => {
+    createCompetition: async (_, { input }, context) => {
       try {
+        await verifyToken(context.req, context.res,() => { }); 
         const existingCompetition = await CompetitionsModel.findOne({
           name: input.name,
         });
@@ -43,8 +48,9 @@ const competitionsResolvers = {
       }
     },
 
-    updateCompetition: async (_, { id, input }) => {
+    updateCompetition: async (_, { id, input }, context) => {
       try {
+        await verifyToken(context.req, context.res,() => { }); 
         const updatedCompetition = await CompetitionsModel.findByIdAndUpdate(
           id,
           input,
@@ -60,8 +66,10 @@ const competitionsResolvers = {
         );
       }
     },
-    deleteCompetition: async (_, { id }) => {
+
+    deleteCompetition: async (_, { id }, context) => {
       try {
+        await verifyToken(context.req, context.res,() => { });
         const deletedCompetition = await CompetitionsModel.findByIdAndRemove(
           id
         );
