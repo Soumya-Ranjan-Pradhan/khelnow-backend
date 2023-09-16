@@ -2,26 +2,25 @@ import { gql } from 'apollo-server-express';
 
 const videos = gql `
 type Video {
-    _id: ID!
-    videoUrl: String!
-    caption: String!
-    sportsType: String!
-    thumbnailUrl: String!
-    duration: String!
-    user: User
+    id: ID!
+    videoUrl: String
+    caption: String
+    sportsType: String
+    thumbnailUrl: String
+    duration: String
+    userId: ID!
+    createdAt: String
+    deletedAt: String
   }
 
-  type User {
-    _id: ID!
-  }
 
   input VideoInput {
-    videoUrl: String!
-    caption: String!
-    sportsType: String!
-    thumbnailUrl: String!
-    duration: String!
-    userId: ID
+    videoUrl: String
+    caption: String
+    sportsType: String
+    thumbnailUrl: String
+    duration: String
+    userId: String
   }
 
   type Query {

@@ -1,6 +1,10 @@
 import SportsModel from "../model/Sports.js";
 import { UserInputError } from "apollo-server-express";
+<<<<<<< HEAD
 import {verifyToken} from "../middleware/verifyToken.js"
+=======
+import {} from "../middleware/verifyToken.js"
+>>>>>>> 12b04f0e363b6a18c5d84a72f4bb21cbe6415ac3
 
 const SportsResolvers = {
   Query: {

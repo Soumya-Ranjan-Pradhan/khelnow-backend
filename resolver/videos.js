@@ -27,12 +27,21 @@ const videosResolver = {
   },
 
   Mutation: {
-    createVideo: async (_, { input }) => {
+    createVideo: async (_, { input }, context) => {
       try {
+<<<<<<< HEAD
         await verifyToken(context.req, context.res, () => {});
         const existingVideo = await videosModel.findOne({
           videoUrl: input.videoUrl,
           // $or: [{ videoUrl: input.videoUrl }, { caption: input.caption }],
+=======
+        const userId = context.userId; 
+        console.log("🚀 ~ file: videos.js:33 ~ createVideo: ~ userId:", userId)
+        input.userId = userId;
+    
+        const existingVideo = await videosModel.findOne({
+          videoUrl: input.videoUrl,
+>>>>>>> 12b04f0e363b6a18c5d84a72f4bb21cbe6415ac3
         });
 
         if (existingVideo) {
@@ -40,6 +49,8 @@ const videosResolver = {
         }
 
         const newVideo = await videosModel.create(input);
+        newVideo.userId = userId;
+        console.log("🚀 ~ file: videos.js:46 ~ createVideo: ~ newVideo:", newVideo)
         return newVideo;
       } catch (error) {
         throw new UserInputError(`Failed to create video: ${error.message}`);

@@ -5,6 +5,7 @@ const createVideos = async (req, res) => {
   const { videoUrl, caption, sportsType, thumbnailUrl, duration} =
     req.body;
 
+<<<<<<< HEAD
   if (
     !videoUrl ||
     !caption ||
@@ -15,6 +16,10 @@ const createVideos = async (req, res) => {
     return res
       .status(422)
       .json({ error: "Please fill in all the fields properly" });
+=======
+  if (!videoUrl || !caption || !sportsType || !thumbnailUrl || !duration || !userId) {
+    return handleError(res, 422, "Please fill in all the fields properly");
+>>>>>>> 12b04f0e363b6a18c5d84a72f4bb21cbe6415ac3
   }
 
   try {
@@ -27,7 +32,7 @@ const createVideos = async (req, res) => {
     });
 
     if (videoExist) {
-      return res.status(400).json({ error: "Video already exists" });
+      return handleError(res, 400, "Video already exists");
     }
 
     const newVideo = new videoModel({
@@ -40,10 +45,10 @@ const createVideos = async (req, res) => {
 
     await newVideo.save();
 
-    res.status(201).json({ message: "Video created successfully" });
+    return res.status(201).json({ message: "Video created successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to create Video" });
+    return handleError(res, 500, "Failed to create Video");
   }
 };
 
@@ -51,9 +56,9 @@ const createVideos = async (req, res) => {
 const AllVideos = async (req, res) => {
   try {
     const videos = await videoModel.find();
-    res.status(200).json(videos);
+    return res.status(200).json(videos);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    return handleError(res, 500, "Internal Server Error");
   }
 };
 
@@ -62,11 +67,11 @@ const getVideo = async (req, res) => {
   try {
     const video = await videoModel.findById(req.params.videoId);
     if (!video) {
-      return res.status(404).json({ error: "Video not found" });
+      return handleError(res, 404, "Video not found");
     }
-    res.status(200).json(video);
+    return res.status(200).json(video);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    return handleError(res, 500, "Internal Server Error");
   }
 };
 
@@ -79,24 +84,24 @@ const updatesVideo = async (req, res) => {
       { new: true }
     );
     if (!updatedVideo) {
-      return res.status(404).json({ error: "Video not found" });
+      return handleError(res, 404, "Video not found");
     }
-    res.status(200).json(updatedVideo);
+    return res.status(200).json(updatedVideo);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    return handleError(res, 500, "Internal Server Error");
   }
 };
 
-//Delete Videos
+// Delete Videos
 const deleteVideos = async (req, res) => {
   try {
     const deletedVideo = await videoModel.findByIdAndRemove(req.params.videoId);
     if (!deletedVideo) {
-      return res.status(404).json({ error: "Video not found" });
+      return handleError(res, 404, "Video not found");
     }
-    res.status(204).json();
+    return res.status(204).json();
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    return handleError(res, 500, "Internal Server Error");
   }
 };
 
