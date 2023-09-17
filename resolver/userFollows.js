@@ -3,7 +3,7 @@ import { UserInputError } from "apollo-server-express";
 
 const userFollows = {
   Mutation: {
-    followUser: async (_, { followerId, followingId }) => { // Updated mutation name
+    followUser: async (_, { followerId, followingId }) => {
       try {
         const existingFollow = await UserFollowsModel.findOne({
           followerId,

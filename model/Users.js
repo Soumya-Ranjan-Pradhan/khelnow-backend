@@ -38,6 +38,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    
   },
   latestRefreshToken: {
     type: String,
@@ -60,6 +61,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.index({ email: 1 }, { unique: true });
+UserSchema.index({ mobile: 1 }, { unique: false });
 UserSchema.index({ userName: 1 }, { unique: true });
 UserSchema.index({ lastName: 1 }, { unique: true });
 UserSchema.index({ firstName: 1 }, { unique: true });

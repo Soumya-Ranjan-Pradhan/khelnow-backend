@@ -18,27 +18,6 @@ const typeDefs = gql`
     tokens: [Token]
   }
 
-  type Token {
-    tokenValue: String
-  }
-
-  type StatusResponse {
-    message: String
-    error: String
-  }
-
-  type AuthTokens {
-    accessToken: String!
-    refreshToken: String!
-  }
-
-  type OTPVerificationResponse {
-    success: Boolean!
-    message: String!
-    accessToken: String
-    refreshToken: String
-  }
-
   input UserInput {
     firstName: String!
     lastName: String!
@@ -52,11 +31,6 @@ const typeDefs = gql`
     deviceIds: [String]
   }
 
-  input VerifyOTPInput {
-  email: String!
-  enteredOTP: String!
-}
-
 
   type Query {
     getUser(id: ID!): User
@@ -67,9 +41,9 @@ const typeDefs = gql`
     createUser(input: UserInput!): User
     updateUser(id: ID!, input: UserInput!): User
     deleteUser(id: ID!): User
-    sendOTP(toEmail: String!): StatusResponse
-    verifyOTP(input: VerifyOTPInput!): OTPVerificationResponse
-    sendAndVerifyOTP(input: VerifyOTPInput!): OTPVerificationResponse
+    # sendOTP(toEmail: String!): StatusResponse
+    # verifyOTP(input: VerifyOTPInput!): OTPVerificationResponse
+    # sendAndVerifyOTP(input: VerifyOTPInput!): OTPVerificationResponse
   }
 `;
 

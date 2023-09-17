@@ -2,12 +2,11 @@ import userModel from "../model/Users.js";
 
 const registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, mobile, userName } = req.body;
+    const { firstName, lastName, email,  userName } = req.body;
     const requiredFields = [
       "firstName",
       "lastName",
       "email",
-      "mobile",
       "userName",
     ];
     const missingFields = requiredFields.filter((field) => !req.body[field]);
@@ -39,7 +38,6 @@ const registerUser = async (req, res) => {
       firstName,
       lastName,
       email,
-      mobile,
       userName,
     });
     await newUser.save();

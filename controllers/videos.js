@@ -2,7 +2,7 @@ import videoModel from "../model/Videos.js";
 
 // Create a new video
 const createVideos = async (req, res) => {
-  const { videoUrl, caption, sportsType, thumbnailUrl, duration, userId } =
+  const { videoUrl, caption, sportsType, thumbnailUrl, duration} =
     req.body;
 
   if (
@@ -10,8 +10,7 @@ const createVideos = async (req, res) => {
     !caption ||
     !sportsType ||
     !thumbnailUrl ||
-    !duration ||
-    !userId
+    !duration
   ) {
     return res
       .status(422)
@@ -25,7 +24,6 @@ const createVideos = async (req, res) => {
       sportsType,
       thumbnailUrl,
       duration,
-      userId,
     });
 
     if (videoExist) {
@@ -38,7 +36,6 @@ const createVideos = async (req, res) => {
       sportsType,
       thumbnailUrl,
       duration,
-      userId,
     });
 
     await newVideo.save();
