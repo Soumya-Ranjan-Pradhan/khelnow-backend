@@ -1,6 +1,6 @@
 import videosModel from "../model/Videos.js";
 import { UserInputError } from "apollo-server-express";
-import { verifyToken } from "../middleware/verifyToken.js";
+import { verifyToken } from "../middleware/verifyToken.js"; // Import 'verifyToken' only once
 
 const videosResolver = {
   Query: {
@@ -30,9 +30,10 @@ const videosResolver = {
     createVideo: async (_, { input }, context) => {
       try {
         await verifyToken(context.req, context.res, () => {});
+        const userId = context.userId; // Assuming you have a userId in the context
+        input.userId = userId;
         const existingVideo = await videosModel.findOne({
           videoUrl: input.videoUrl,
-          // $or: [{ videoUrl: input.videoUrl }, { caption: input.caption }],
         });
 
         if (existingVideo) {
@@ -40,6 +41,7 @@ const videosResolver = {
         }
 
         const newVideo = await videosModel.create(input);
+        newVideo.userId = userId;
         return newVideo;
       } catch (error) {
         throw new UserInputError(`Failed to create video: ${error.message}`);

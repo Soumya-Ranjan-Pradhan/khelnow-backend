@@ -1,16 +1,15 @@
+import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import dotenv from "dotenv";
 import "./config/db.js";
 import routes from "./routes.js";
-import { ApolloServer } from "apollo-server-express";
 import typeDefs from "./graphql/index.js";
-import resolvers from "./resolver/index.js"
-import cors from "cors"
-
+import resolvers from "./resolver/index.js";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.use(routes);
 
@@ -18,7 +17,7 @@ const serverStart = async () => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: ({ req, res }) => ({ req, res }), 
+    context: ({ req, res }) => ({ req, res }),
   });
 
   await server.start();

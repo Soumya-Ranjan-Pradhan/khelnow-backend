@@ -152,7 +152,7 @@ const authUserResolvers = {
           refreshToken: null,
         };
       }
-    },
+    },  
   },
 };
 

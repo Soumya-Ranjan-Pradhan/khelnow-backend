@@ -14,6 +14,7 @@ export const authUserTypeDefs = gql`
     email: String
     enteredOTP: String!
   }
+  
 
   type StatusResponse {
     message: String
@@ -51,10 +52,14 @@ export const authUserTypeDefs = gql`
     error: String
   }
 
+  input SendOTPInput {
+    email: String!
+  }
+
   type Mutation {
     login(input: LoginInput!): LoginResponse
     register(input: RegisterInput!): LoginResponse
     validateWithOtp(input: ValidateInput): OTPVerificationResponse
-    sendOTP(toEmail: String!): StatusResponse
+    sendOTP(input:  SendOTPInput!): StatusResponse
   }
 `;
