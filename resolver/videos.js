@@ -12,9 +12,8 @@ const videosResolver = {
         throw new UserInputError(`Failed to fetch videos: ${error.message}`);
       }
     },
-    video: async (_, { id }, context) => {
+    video: async (_, { id }) => {
       try {
-        await verifyToken(context.req, context.res, () => {});
         const video = await videosModel.findById(id);
         if (!video) {
           throw new UserInputError("Video not found");

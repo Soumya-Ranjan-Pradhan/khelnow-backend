@@ -22,8 +22,9 @@ export const authUserTypeDefs = gql`
   }
 
   type LoginResponse {
-    success: Boolean!
-    message: String!
+    success: Boolean
+    message: String
+    error: String
   }
 
   type OTPVerificationResponse {

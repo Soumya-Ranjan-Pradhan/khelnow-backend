@@ -8,7 +8,6 @@ type Video {
     sportsType: String
     thumbnailUrl: String
     duration: String
-    userId: ID!
     createdAt: String
     deletedAt: String
   }
@@ -20,7 +19,6 @@ type Video {
     sportsType: String
     thumbnailUrl: String
     duration: String
-    userId: String
   }
 
   type Query {
