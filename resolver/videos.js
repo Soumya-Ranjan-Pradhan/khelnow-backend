@@ -28,19 +28,20 @@ const videosResolver = {
   Mutation: {
     createVideo: async (_, { input }, context) => {
       try {
-        await verifyToken(context.req, context.res, () => {});
-        const userId = context.userId; // Assuming you have a userId in the context
+        const userId = context.userId; 
         input.userId = userId;
+   
         const existingVideo = await videosModel.findOne({
           videoUrl: input.videoUrl,
         });
-
+       
+    
         if (existingVideo) {
           throw new UserInputError("Video already exists");
         }
-
+    
         const newVideo = await videosModel.create(input);
-        newVideo.userId = userId;
+        console.log("🚀 ~ file: videos.js:46 ~ createVideo: ~ input:", input)
         return newVideo;
       } catch (error) {
         throw new UserInputError(`Failed to create video: ${error.message}`);
@@ -49,13 +50,21 @@ const videosResolver = {
 
     updateVideo: async (_, { id, input }, context) => {
       try {
-        await verifyToken(context.req, context.res, () => {});
-        const updatedVideo = await videosModel.findByIdAndUpdate(id, input, {
-          new: true,
-        });
-        if (!updatedVideo) {
-          throw new UserInputError("Video not found");
+        const userId = context.userId;
+        if (!userId) {
+          throw new AuthenticationError('User not authenticated');
         }
+    
+        const updatedVideo = await videosModel.findOneAndUpdate(
+          { _id: id, userId }, // Ensure the video belongs to the user
+          input,
+          { new: true }
+        );
+    
+        if (!updatedVideo) {
+          throw new UserInputError("Video not found or does not belong to the user");
+        }
+    
         return updatedVideo;
       } catch (error) {
         throw new UserInputError(`Failed to update video: ${error.message}`);
@@ -64,16 +73,23 @@ const videosResolver = {
 
     deleteVideo: async (_, { id }, context) => {
       try {
-        await verifyToken(context.req, context.res, () => {});
-        const deletedVideo = await videosModel.findByIdAndRemove(id);
-        if (!deletedVideo) {
-          throw new UserInputError("Video not found");
+        const userId = context.userId;
+        if (!userId) {
+          throw new AuthenticationError('User not authenticated');
         }
+    
+        const deletedVideo = await videosModel.findOneAndRemove({ _id: id, userId });
+    
+        if (!deletedVideo) {
+          throw new UserInputError("Video not found or does not belong to the user");
+        }
+    
         return deletedVideo;
       } catch (error) {
         throw new UserInputError(`Failed to delete video: ${error.message}`);
       }
     },
+    
   },
 };
 

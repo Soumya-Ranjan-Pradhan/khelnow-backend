@@ -15,6 +15,7 @@ type Video {
 
   input VideoInput {
     videoUrl: String
+    userId: String
     caption: String
     sportsType: String
     thumbnailUrl: String

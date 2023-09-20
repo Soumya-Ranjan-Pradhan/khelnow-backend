@@ -9,6 +9,8 @@ import { governingBodies } from "../graphql/governigBodies.js";
 import { coaches } from "../graphql/coaches.js";
 import { videos } from "../graphql/videos.js";
 import {authUserTypeDefs} from "../graphql/authUser.js"
+import {likeTypeDefs} from "../graphql/likes.js"
+import { commentTypeDefs } from "../graphql/comments.js";
 
 const AllTypeDefs = [
   typeDefs,
@@ -21,7 +23,9 @@ const AllTypeDefs = [
   governingBodies,
   coaches,
   videos,
-  authUserTypeDefs
+  authUserTypeDefs,
+  likeTypeDefs,
+  commentTypeDefs
 ];
 
 export default AllTypeDefs;

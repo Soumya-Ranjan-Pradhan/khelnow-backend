@@ -11,6 +11,8 @@ import playersResolvers from "../resolver/players.js"
 // import verifyResolvers from "../resolver/otp.js";
 // import otpResolvers from "../resolver/verifyOtp.js"
 import authUserResolvers from "../resolver/authResolver.js"
+import likeResolvers from "../resolver/likes.js";
+import commentResolvers from "../resolver/comments.js";
 
 const allResolvers = [
   resolvers,
@@ -25,6 +27,8 @@ const allResolvers = [
   videosResolver,
   // verifyResolvers,
   // otpResolvers,
-  authUserResolvers
+  authUserResolvers,
+  likeResolvers,
+  commentResolvers,
 ];
 export default allResolvers;
