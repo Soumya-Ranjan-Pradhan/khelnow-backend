@@ -6,6 +6,7 @@ const commentResolvers = {
     getAllComments: async (_, { id }) => {
       try {
         const comments = await CommentModel.find({ videoId: id }).exec();
+        console.log("🚀 ~ file: comments.js:9 ~ getAllComments: ~ comments:", comments)
         return comments;
       } catch (error) {
         throw new Error("Error fetching comments");
