@@ -3,13 +3,20 @@ import CommentModel from "../model/comments.js";
 
 const commentResolvers = {
   Query: {
-    getAllComments: async (_, { id }) => {
+    getAllComments: async (_, { id }  ) => {
       try {
         const comments = await CommentModel.find({ videoId: id }).exec();
-        console.log("🚀 ~ file: comments.js:9 ~ getAllComments: ~ comments:", comments)
         return comments;
       } catch (error) {
         throw new Error("Error fetching comments");
+      }
+    },
+    getCommentById: async (_, { commentId }) => {
+      try {
+        const comment = await CommentModel.findById(commentId).exec();
+        return comment;
+      } catch (error) {
+        throw new Error("Error fetching comment by ID");
       }
     },
   },
