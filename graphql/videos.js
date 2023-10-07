@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-express';
 
 const videos = gql `
-type Video {
+  type Video {
     id: ID!
     videoUrl: String
     caption: String
@@ -11,7 +11,6 @@ type Video {
     createdAt: String
     deletedAt: String
   }
-
 
   input VideoInput {
     videoUrl: String

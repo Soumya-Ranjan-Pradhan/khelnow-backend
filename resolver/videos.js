@@ -1,6 +1,5 @@
 import videosModel from "../model/Videos.js";
 import { UserInputError } from "apollo-server-express";
-import { verifyToken } from "../middleware/verifyToken.js"; // Import 'verifyToken' only once
 
 const videosResolver = {
   Query: {

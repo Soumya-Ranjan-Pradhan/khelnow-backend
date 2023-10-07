@@ -76,39 +76,39 @@ const authUserResolvers = {
     },
 
     validateWithOtp: async (_, { input }) => {
-        console.log("input",input)
+      console.log("input", input);
       try {
         const { email, enteredOTP } = input;
         const actualOTP = otpStorage[email];
-
-        console.log(actualOTP)
+    
+        console.log(actualOTP);
         if (!actualOTP) {
           throw new Error("OTP not found");
         }
-
+    
         if (enteredOTP === actualOTP) {
           const user = await userModel.findOne({ email });
-
+    
           if (!user) {
             throw new Error("User not found");
           }
-
+    
           console.log("Generating tokens...");
           const accessToken = generateAuthToken(
             { _id: user.id, email: user.email },
             process.env.JWT_TOKEN,
             "12h"
           );
-
+    
           const refreshToken = generateAuthToken(
             { _id: user.id, email: user.email },
             process.env.REFRESH_TOKEN_SECRET,
             "7d"
           );
           console.log("Generated tokens:", accessToken, refreshToken);
-
+    
           delete otpStorage[email];
-
+    
           return {
             success: true,
             message: "OTP verified successfully",

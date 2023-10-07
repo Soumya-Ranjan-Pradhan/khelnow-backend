@@ -7,7 +7,7 @@ import {
   updatesVideo,
   deleteVideos,
 } from "../controllers/videos.js";
-// import verifyToken from '../middleware/verifyToken.js';
+
 
 router.post("/", createVideos);
 
