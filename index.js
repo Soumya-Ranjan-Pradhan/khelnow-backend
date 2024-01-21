@@ -11,10 +11,10 @@ import { verifyToken } from "./middleware/verifyToken.js";
 // import AWS from "aws-sdk"
 
 // AWS.config.update({
-//   accessKeyId: "AKIAXL3NMJXCH2K2RK7Z",
-//   secretAccessKey: "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",
-//   region: "us-east-1",
-// });  
+//   accessKeyId: "",
+//   secretAccessKey: "",
+//   region: "",
+// });
 
 // const s3 = new AWS.S3();
 
@@ -26,7 +26,6 @@ const app = express();
 app.use(express.json());
 app.use(routes);
 
-
 // app.post("/api/upload/videos", upload.single('videoFile'), (req, res) => {
 //   const file = req.file;
 //   if (!file) {
@@ -35,7 +34,7 @@ app.use(routes);
 
 //   const myBucket = "soumyaranjanpradhan";
 //   const myKey = `videos/${file.originalname}`;
-  
+
 //   const params = {
 //       Bucket: myBucket,
 //       Key: myKey,
@@ -61,7 +60,7 @@ app.use(routes);
 //   const params = {
 //       Bucket: myBucket,
 //       Key: `videos/${filename}`,
-//       Expires: 3600, 
+//       Expires: 3600,
 //   };
 
 //   s3.getSignedUrl("getObject", params, (err, url) => {
@@ -74,8 +73,6 @@ app.use(routes);
 //   });
 // });
 
-
-
 app.use(verifyToken);
 
 const serverStart = async () => {
@@ -83,10 +80,10 @@ const serverStart = async () => {
     typeDefs,
     resolvers,
 
-    context: ({ req, res }) => ({ req, res }), 
+    context: ({ req, res }) => ({ req, res }),
 
     context: ({ req }) => {
-      const token = req.headers.authorization?.split(' ')[1];
+      const token = req.headers.authorization?.split(" ")[1];
       if (token) {
         try {
           const decoded = jwt.verify(token, process.env.JWT_TOKEN);
@@ -94,7 +91,7 @@ const serverStart = async () => {
             userId: decoded._id,
           };
         } catch (error) {
-          throw new AuthenticationError('Invalid token');
+          throw new AuthenticationError("Invalid token");
         }
       }
       return {};
